@@ -2,6 +2,9 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {BuilderScene} from '../src/scene.js';
 import {demoProject} from '../src/model.js';
+import {readFile} from 'node:fs/promises';
+import {setGeometryReader} from '../src/geometry.js';
+setGeometryReader(async part=>JSON.parse(await readFile(new URL(`../public${part.geometry}`,import.meta.url),'utf8')));
 
 test('GLB export produces a self-contained model with metre scale and geometry',async()=>{
   // Browser FileReader adapter for exercising the real exporter in Node.
@@ -18,6 +21,7 @@ test('GLB export produces a self-contained model with metre scale and geometry',
     const json=JSON.parse(new TextDecoder().decode(new Uint8Array(buffer,20,view.getUint32(12,true))));
     assert.equal(json.asset.version,'2.0');
     assert.ok(json.meshes.length>0);
+    assert.ok(json.nodes.some(node=>node.extras?.ldraw?.parts.every(p=>p.authors.length&&p.licenses.length&&p.sourceUrl)),'attribution is embedded');
     assert.ok(json.nodes.some(node=>node.scale?.every(value=>value===.008) ||
       (node.matrix && [0,5,10].every(i=>node.matrix[i]===.008))), 'the root transform converts studs to metres');
     assert.ok(json.buffers.every(buffer=>!buffer.uri),'geometry is embedded, without network resources');

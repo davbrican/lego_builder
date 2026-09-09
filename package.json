@@ -1,10 +1,11 @@
 {
   "name": "lego-builder",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "engines": { "node": ">=22.12.0" },
   "scripts": {
+    "catalog:build": "node scripts/build-ldraw.mjs",
     "dev": "vite --host 0.0.0.0 --port 8098",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 8098",

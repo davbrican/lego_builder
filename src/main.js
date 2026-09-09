@@ -1,9 +1,10 @@
 import './style.css';
 import {createIcons, Box, Plus, MousePointer2, Move, Paintbrush, Eraser, RotateCw, Undo2, Redo2, Save, FolderOpen, Download, Upload, Search, X, Copy, Trash2, Grid3x3, Layers, ChevronDown, Expand, Camera, HelpCircle, Check, ZoomIn, ZoomOut, Package, Menu, ArrowUpRight} from 'lucide';
-import {PARTS, PART_MAP, COLORS, dimensions} from './catalog.js';
-import {uid, placementError, parseProject, inventory, bounds, connectedIds, History, demoProject} from './model.js';
+import {PARTS, PART_MAP, COLORS, dimensions, CATEGORIES, searchParts, FORMAT_VERSION} from './catalog.js';
+import {uid, placementError, parseProject, inventory, bounds, connectedIds, History, demoProject, candidateFromHit} from './model.js';
 import {loadAutosave, saveAutosave, saveProject, listProjects, removeProject} from './storage.js';
-import {BuilderScene, renderThumbnails} from './scene.js';
+import {BuilderScene, createThumbnailRenderer} from './scene.js';
+import {ensureGeometry,ensureGeometries,hasGeometry} from './geometry.js';
 
 const icons={Box,Plus,MousePointer2,Move,Paintbrush,Eraser,RotateCw,Undo2,Redo2,Save,FolderOpen,Download,Upload,Search,X,Copy,Trash2,Grid3x3,Layers,ChevronDown,Expand,Camera,HelpCircle,Check,ZoomIn,ZoomOut,Package,Menu,ArrowUpRight};
 const icon=name=>`<i data-lucide="${name}" aria-hidden="true"></i>`;
@@ -13,7 +14,9 @@ const button=(action,label,ico,cls='')=>`<button data-action="${action}" class="
 const history=new History();
 let project=demoProject(),storageError=null,autosavePaused=false;
 try{project=loadAutosave()||project;}catch(e){storageError='No se pudo recuperar el autoguardado. Puedes importar una copia o iniciar un proyecto nuevo.';autosavePaused=true;}
-let scene, mode='build',partId='brick-2x4',color=COLORS[0].hex,rotation=0,selectedId=null,moving=null,candidate=null,candidateError=null,category='Todas',filter='',thumbs={},saveTimer,toastTimer,lastHit=null,allowFloating=false,manualLayer=null;
+let thumbnailRenderer,thumbnailObserver;
+const thumbnailJobs=new Map();
+let scene, mode='build',partId='3001',color=COLORS[0].hex,rotation=0,selectedId=null,moving=null,candidate=null,candidateError=null,category='Todas',filter='',thumbs={},saveTimer,toastTimer,lastHit=null,allowFloating=false,manualLayer=null;
 
 $('#app').innerHTML=`
   <header class="topbar">
@@ -29,12 +32,12 @@ $('#app').innerHTML=`
   <main class="workspace">
     <aside class="catalog" id="catalog-panel" aria-label="Catálogo de piezas">
       <div class="panel-heading"><div><span class="eyebrow">TU CAJA DE PIEZAS</span><h1>Todo empieza<br>con una pieza.</h1></div>${button('toggle-catalog','Cerrar piezas','x','mobile-only')}</div>
-      <label class="search-field">${icon('search')}<input id="search" placeholder="Buscar una pieza…" aria-label="Buscar pieza"></label>
-      <div class="categories" role="group" aria-label="Tipo de pieza">${['Todas','Ladrillos','Placas','Baldosas'].map(c=>`<button data-category="${c}" aria-pressed="${c==='Todas'}" class="${c==='Todas'?'active':''}">${c}</button>`).join('')}</div>
-      <div class="catalog-meta"><span id="catalog-count">${PARTS.length} piezas</span><span>Tetones ${icon('grid3x3')}</span></div>
+      <label class="search-field">${icon('search')}<input id="search" placeholder="Nombre, referencia o tamaño…" aria-label="Buscar pieza"></label>
+      <label class="category-filter"><span>Categoría</span><select id="category-filter" aria-label="Categoría de piezas">${CATEGORIES.map(c=>`<option value="${c}">${c}${c==='Todas'?'':` (${PARTS.filter(p=>p.category===c).length})`}</option>`).join('')}</select></label>
+      <div class="catalog-meta"><span id="catalog-count">${PARTS.length} piezas</span><button data-action="part-info" class="catalog-info">Ficha de pieza</button></div>
       <div class="parts-grid" id="parts-grid"></div>
       <section class="palette"><div class="section-title"><h2>Color</h2><span id="color-name">Rojo</span></div><div class="swatches">${COLORS.map(c=>`<button data-color="${c.hex}" class="swatch" style="--swatch:${c.hex}" title="${c.name}" aria-label="${c.name}" aria-pressed="${c.hex===color}"></button>`).join('')}</div></section>
-      <div class="catalog-footer">${icon('box')}<span>Sin límite de imaginación.</span></div>
+      <button class="catalog-footer" data-action="credits">${icon('box')}<span>Modelos LDraw · créditos y fuentes</span></button>
     </aside>
     <section class="stage" id="stage" aria-label="Editor 3D">
       <div class="stage-top">
@@ -51,6 +54,7 @@ $('#app').innerHTML=`
       <div class="floating-notice" id="floating-notice" hidden></div>
       <div class="build-dock"><div class="active-part"><span class="active-swatch" id="active-swatch"></span><div><strong id="active-part-name">Ladrillo 2 × 4</strong><span id="active-mode-label">Clic en la base para construir</span></div></div><button data-action="rotate" title="Girar 90° (R)">${icon('rotate-cw')}<span id="rotation-label">0°</span><kbd>R</kbd></button></div>
       <div class="canvas-help">Arrastra para orbitar <span>·</span> Rueda para acercar <span>·</span> Botón derecho para desplazar</div>
+      <div class="loading-model" id="loading-model">Cargando las piezas del taller…</div>
       <div class="webgl-error" id="webgl-error" hidden><h2>No se ha podido iniciar la vista 3D</h2><p>Activa la aceleración gráfica de tu navegador y vuelve a abrir la página. Necesitas un navegador compatible con WebGL 2.</p></div>
     </section>
   </main>
@@ -69,17 +73,32 @@ function queueSave(){
   saveTimer=setTimeout(()=>{try{saveAutosave(project);$('#save-status').textContent='Guardado en este navegador';}catch(e){$('#save-status').textContent='No se pudo guardar';toast('No hay espacio o el almacenamiento está bloqueado. Exporta tu proyecto para conservarlo.',true);}},250);
 }
 function renderCatalog(){
-  const normalized=filter.toLowerCase().replaceAll('x','×');
-  const parts=PARTS.filter(p=>(category==='Todas'||p.category===category)&&p.name.toLowerCase().includes(normalized));
-  $('#catalog-count').textContent=`${parts.length} piezas`;
-  $('#parts-grid').innerHTML=parts.length?parts.map(p=>`<button class="part-card ${p.id===partId?'active':''}" data-part="${p.id}" aria-label="${p.name}" aria-pressed="${p.id===partId}"><span class="part-check">${icon('check')}</span>${thumbs[p.id]?`<img src="${thumbs[p.id]}" alt="" draggable="false">`:`<span class="part-fallback">${p.w} × ${p.d}</span>`}<strong>${p.w} × ${p.d}</strong><span>${p.category==='Ladrillos'?'Ladrillo':p.category==='Placas'?'Placa':'Baldosa lisa'}</span></button>`).join(''):'<p class="empty-message">No hay piezas con ese nombre.</p>';
+  thumbnailObserver?.disconnect();
+  const parts=searchParts(filter,category);
+  $('#catalog-count').textContent=`${parts.length} de ${PARTS.length} piezas`;
+  $('#parts-grid').innerHTML=parts.length?parts.map(p=>`<button class="part-card ${p.id===partId?'active':''}" data-part="${p.id}" aria-label="${escape(p.name)}, referencia ${p.id}" aria-pressed="${p.id===partId}"><span class="part-check">${icon('check')}</span><span class="part-preview" data-preview="${p.id}">${thumbs[p.id]?`<img src="${thumbs[p.id]}" alt="" draggable="false">`:`<span class="part-fallback">${icon('box')}</span>`}</span><strong>${escape(p.name)}</strong><span class="part-reference">Ref. ${p.id}</span></button>`).join(''):'<p class="empty-message">No hay piezas con ese nombre o referencia.</p>';
+  document.querySelectorAll('[data-preview]').forEach(el=>{if(!thumbs[el.dataset.preview])thumbnailObserver?.observe(el);});
   refreshIcons();
+}
+function observeThumbnails(){
+  thumbnailObserver=new IntersectionObserver(entries=>{
+    for(const entry of entries){
+      if(!entry.isIntersecting)continue;
+      const element=entry.target,id=element.dataset.preview;thumbnailObserver.unobserve(element);
+      if(!thumbnailJobs.has(id))thumbnailJobs.set(id,thumbnailRenderer(PART_MAP[id]).finally(()=>thumbnailJobs.delete(id)));
+      thumbnailJobs.get(id).then(url=>{
+        thumbs[id]=url;
+        const target=document.querySelector(`[data-preview="${id}"]`);
+        if(target){const img=document.createElement('img');img.src=url;img.alt='';img.draggable=false;target.replaceChildren(img);}
+      }).catch(()=>{if(element.isConnected)element.textContent='Vista no disponible';});
+    }
+  },{root:$('#parts-grid'),rootMargin:'100px'});
 }
 function selected(){return project.pieces.find(p=>p.id===selectedId);}
 function renderSelection(){
   const piece=selected(),el=$('#selection-card');el.hidden=!piece;
   if(!piece)return;
-  el.innerHTML=`<div class="section-title"><span class="eyebrow">PIEZA SELECCIONADA</span>${button('deselect','Deseleccionar','x')}</div><h2>${PART_MAP[piece.part].name}</h2><p>Posición en tetones · altura en placas</p><div class="coordinates">${['x','y','z'].map(axis=>`<label>${axis.toUpperCase()}<input data-coordinate="${axis}" type="number" step="1" min="0" max="${axis==='y'?299:project.size-1}" value="${piece[axis]}" aria-label="Posición ${axis.toUpperCase()}"></label>`).join('')}</div><button class="position-apply" data-action="apply-position">Aplicar posición</button><div class="selection-actions">${button('move-selection','Mover pieza (M)','move')}${button('duplicate','Duplicar (Ctrl/Cmd D)','copy')}${button('rotate-selection','Girar pieza','rotate-cw')}${button('delete','Eliminar (Supr)','trash-2')}</div>`;
+  el.innerHTML=`<div class="section-title"><span class="eyebrow">PIEZA SELECCIONADA</span>${button('deselect','Deseleccionar','x')}</div><h2>${escape(PART_MAP[piece.part].name)}</h2><button class="reference-link" data-action="selection-info">Ref. ${piece.part} · Ver ficha</button><p>Posición en tetones · altura en placas</p><div class="coordinates">${['x','y','z'].map(axis=>`<label>${axis.toUpperCase()}<input data-coordinate="${axis}" type="number" step="0.5" min="0" max="${axis==='y'?299:project.size-1}" value="${piece[axis]}" aria-label="Posición ${axis.toUpperCase()}"></label>`).join('')}</div><button class="position-apply" data-action="apply-position">Aplicar posición</button><div class="selection-actions">${button('move-selection','Mover pieza (M)','move')}${button('duplicate','Duplicar (Ctrl/Cmd D)','copy')}${button('rotate-selection','Girar pieza','rotate-cw')}${button('delete','Eliminar (Supr)','trash-2')}</div>`;
   refreshIcons();
 }
 function renderState(){
@@ -112,8 +131,8 @@ function hover(hit){
   lastHit=hit;
   if(!hit || (mode!=='build' && !(mode==='move'&&moving))){candidate=null;scene?.setGhost(null);return;}
   const base=moving||{id:'preview',part:partId,color,rotation};
-  const d=dimensions({...base,rotation});
-  candidate={...base,rotation,x:Math.floor(hit.point.x)-Math.floor(d.w/2),z:Math.floor(hit.point.z)-Math.floor(d.d/2),y:hit.layer??(hit.piece?hit.piece.y+dimensions(hit.piece).h:0)};
+  if(!hasGeometry(base.part)){candidate=null;scene?.setGhost(null);setStatus('Cargando la pieza…');return;}
+  candidate=candidateFromHit({...base,rotation},hit);
   candidateError=placementError(candidate,project.pieces,project.size,{allowFloating,ignoreId:moving?.id});
   scene?.setGhost(candidate,!candidateError);
   setStatus(candidateError||`Colocar en X ${candidate.x} · Y ${candidate.y} · Z ${candidate.z}`,!!candidateError);
@@ -141,7 +160,7 @@ function rotateSelected(){
 }
 function rotate(){if(mode==='select'&&selected())return rotateSelected();rotation=(rotation+90)%360;updateDock();hover(lastHit);}
 function undo(redo=false){cancelMove();const next=redo?history.redo(project):history.undo(project);if(next){project=next;selectedId=null;renderState();setStatus(redo?'Cambio rehecho':'Cambio deshecho');}}
-function load(next){cancelMove();selectedId=null;autosavePaused=false;manualLayer=null;if(scene)scene.manualLayer=null;commit(next);scene?.view('iso');closeDialog();}
+async function load(next){await ensureGeometries(next.pieces.map(p=>p.part));cancelMove();selectedId=null;autosavePaused=false;manualLayer=null;mode='build';if(scene)scene.manualLayer=null;commit(next);scene?.view('iso');closeDialog();}
 function download(blob,extension){
   const url=typeof blob==='string'?blob:URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${project.name.replace(/[^\p{L}\p{N}_-]+/gu,'-').slice(0,80)||'bricklab'}.${extension}`;a.click();if(typeof blob!=='string')setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
@@ -157,13 +176,19 @@ function showLibrary(){
 function showExport(){openDialog('Llévate tu construcción',`<p class="dialog-intro">${project.pieces.length} piezas, una idea tuya.</p><div class="option-list"><button data-action="export-json">${icon('box')}<span><strong>Proyecto editable</strong><small>JSON · Para seguir construyendo en Bricklab</small></span></button><button data-action="export-glb">${icon('download')}<span><strong>Modelo 3D</strong><small>GLB · Para Blender y otros visores. Escala en metros.</small></span></button><button data-action="export-png">${icon('camera')}<span><strong>Foto de tu modelo</strong><small>PNG · La vista actual, sin controles</small></span></button><button data-action="export-csv">${icon('package')}<span><strong>Lista de piezas</strong><small>CSV · Tipo, color y cantidad</small></span></button></div>`);}
 function showInventory(){
   const rows=inventory(project.pieces);
-  openDialog('Lista de piezas',`<p class="dialog-intro">${project.pieces.length} piezas en ${rows.length} combinaciones de tipo y color.</p><div class="inventory-table"><table><thead><tr><th>Pieza</th><th>Color</th><th>Cantidad</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${PART_MAP[r.part].name}</td><td><span class="inventory-swatch" style="background:${r.color}"></span>${COLORS.find(c=>c.hex===r.color)?.name||r.color}</td><td>${r.count}</td></tr>`).join('')}</tbody></table></div><button data-action="export-csv" class="primary wide">${icon('download')}Descargar lista CSV</button>`);
+  openDialog('Lista de piezas',`<p class="dialog-intro">${project.pieces.length} piezas en ${rows.length} combinaciones de tipo y color.</p><div class="inventory-table"><table><thead><tr><th>Ref.</th><th>Pieza</th><th>Color</th><th>Cantidad</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.part}</td><td>${escape(PART_MAP[r.part].name)}</td><td><span class="inventory-swatch" style="background:${r.color}"></span>${COLORS.find(c=>c.hex===r.color)?.name||r.color}</td><td>${r.count}</td></tr>`).join('')}</tbody></table></div><button data-action="export-csv" class="primary wide">${icon('download')}Descargar lista CSV</button>`);
 }
-function showSettings(){openDialog('Base y encaje',`<label class="field-label">Tamaño de la base<select id="base-size">${[16,32,48,64].map(s=>`<option value="${s}" ${project.size===s?'selected':''}>${s} × ${s} tetones</option>`).join('')}</select></label><p class="field-help">La base no se puede reducir si alguna pieza queda fuera.</p><label class="toggle-row"><span>Mostrar cuadrícula y tetones</span><input id="grid-toggle" type="checkbox" ${scene?.grid.visible?'checked':''}></label><label class="toggle-row"><span>Permitir piezas en el aire</span><input id="floating-toggle" type="checkbox" ${allowFloating?'checked':''}></label><p class="field-help">Útil para bocetar. Las piezas sin conexión a la base se señalan en el editor.</p><label class="toggle-row"><span>Elegir la altura manualmente</span><input id="layer-toggle" type="checkbox" ${manualLayer!==null?'checked':''}></label><label class="field-label">Altura de colocación (placas)<input id="manual-layer" type="number" min="0" max="299" step="1" value="${manualLayer??0}" ${manualLayer===null?'disabled':''}></label><p class="field-help">1 ladrillo = 3 placas. En automático, se usa la superficie que señales.</p>`);}
-function showHelp(){openDialog('Unas pistas para construir',`<div class="help-steps"><p><strong>1. Elige una pieza y un color.</strong> La silueta muestra dónde se colocará. Verde significa que encaja; rojo indica un solapamiento o falta de apoyo.</p><p><strong>2. Pulsa para colocar; arrastra para mirar.</strong> En móvil, toca para colocar y usa dos dedos para acercar o desplazar la cámara.</p><p><strong>3. Construye sobre los tetones.</strong> Los ladrillos tienen 3 placas de altura. Las baldosas son lisas: no permiten encajar otra pieza por encima.</p></div><dl class="shortcuts">${[['B / V','Construir / seleccionar'],['M / P / X','Mover / pintar / borrar'],['R','Girar 90°'],['Supr / Retroceso','Eliminar selección'],['Ctrl o ⌘ + D','Duplicar selección'],['Ctrl o ⌘ + Z','Deshacer'],['Ctrl o ⌘ + Shift + Z','Rehacer'],['Ctrl o ⌘ + S','Guardar una copia'],['F','Centrar la cámara'],['Esc','Cancelar movimiento o selección']].map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join('')}</dl><p class="field-help">Las dimensiones son nominales. Bricklab es un prototipo independiente de construcción; no calcula resistencia, tolerancias de fabricación ni disponibilidad de piezas comerciales.</p>`);}
+function showPartInfo(id=partId){
+  const p=PART_MAP[id];
+  openDialog(p.name,`<div class="part-detail-preview">${thumbs[id]?`<img src="${thumbs[id]}" alt="${escape(p.name)}">`:''}<strong>Ref. LDraw ${p.id}</strong></div><p class="dialog-intro">${escape(p.description)}</p><dl class="shortcuts"><div><dt>Categoría</dt><dd>${p.category}</dd></div><div><dt>Espacio ocupado</dt><dd>${p.w} × ${p.d} tetones</dd></div><div><dt>Altura del cuerpo</dt><dd>${p.h} placas</dd></div><div><dt>Tetones superiores</dt><dd>${p.top.length||'Cara lisa'}</dd></div></dl><p class="field-help">${p.category==='Ruedas'?'Ruedas y neumáticos son piezas independientes. Puedes colocarlos en la base o usar el modo libre; aún no hay encaje de ejes.':'El encaje usa los tetones y huecos definidos para esta pieza. Los colores son libres y no indican disponibilidad comercial.'}</p><div class="source-links"><a href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">Archivo original LDraw ↗</a><a href="https://www.lego.com/es-es/pick-and-build/pick-a-brick?query=${p.id.replace(/[a-z]+$/,'')}" target="_blank" rel="noopener noreferrer">Buscar referencia en LEGO ↗</a></div><p class="field-help">Geometría de la comunidad LDraw; no es una biblioteca publicada por LEGO. <button data-action="credits" class="inline-link">Autores y licencias</button></p>`);
+}
+function showCredits(){openDialog('Piezas, fuentes y créditos',`<p class="dialog-intro">${PARTS.length} modelos de la biblioteca LDraw.org, edición 2026-08. LDraw es un proyecto comunitario independiente que representa piezas reales de LEGO.</p><p class="field-help">Los modelos se han triangulado, escalado y recoloreado para Bricklab. Se conservan las atribuciones de los autores y las licencias CC BY 2.0 y/o CC BY 4.0 de cada archivo y sus dependencias.</p><div class="source-links"><a href="https://library.ldraw.org/" target="_blank" rel="noopener noreferrer">Biblioteca LDraw ↗</a><a href="/ldraw/attribution.json" target="_blank" rel="noopener noreferrer">Autores y fuentes de las ${PARTS.length} piezas ↗</a><a href="/ldraw/CAreadme.txt" target="_blank" rel="noopener noreferrer">Condiciones y atribución ↗</a><a href="/ldraw/CAlicense.txt" target="_blank" rel="noopener noreferrer">Licencia CC BY 2.0 ↗</a><a href="/ldraw/CAlicense4.txt" target="_blank" rel="noopener noreferrer">Licencia CC BY 4.0 ↗</a></div><p class="field-help">Los colores son de libre elección; el catálogo no verifica existencias ni combinaciones comerciales. El encaje por ejes, pasadores y bisagras y las simulaciones de resistencia quedan fuera de esta versión.</p>`);}
+function showSettings(){openDialog('Base y encaje',`<label class="field-label">Tamaño de la base<select id="base-size">${[16,32,48,64].map(s=>`<option value="${s}" ${project.size===s?'selected':''}>${s} × ${s} tetones</option>`).join('')}</select></label><p class="field-help">La base no se puede reducir si alguna pieza queda fuera.</p><label class="toggle-row"><span>Mostrar cuadrícula y tetones</span><input id="grid-toggle" type="checkbox" ${scene?.grid.visible?'checked':''}></label><label class="toggle-row"><span>Permitir piezas en el aire</span><input id="floating-toggle" type="checkbox" ${allowFloating?'checked':''}></label><p class="field-help">Útil para bocetar. Las piezas sin conexión a la base se señalan en el editor.</p><label class="toggle-row"><span>Elegir la altura manualmente</span><input id="layer-toggle" type="checkbox" ${manualLayer!==null?'checked':''}></label><label class="field-label">Altura de colocación (placas)<input id="manual-layer" type="number" min="0" max="299" step="0.5" value="${manualLayer??0}" ${manualLayer===null?'disabled':''}></label><p class="field-help">1 ladrillo = 3 placas. En automático, se usa la superficie que señales.</p>`);}
+function showHelp(){openDialog('Unas pistas para construir',`<div class="help-steps"><p><strong>1. Elige una pieza y un color.</strong> La silueta muestra dónde se colocará. Verde significa que encaja; rojo indica un solapamiento o falta de apoyo.</p><p><strong>2. Pulsa para colocar; arrastra para mirar.</strong> En móvil, toca para colocar y usa dos dedos para acercar o desplazar la cámara.</p><p><strong>3. Construye sobre los tetones.</strong> El ladrillo básico tiene 3 placas de altura. Las pendientes solo tienen tetones en su zona de encaje; las baldosas lisas no permiten encajar encima. Puedes buscar piezas por nombre, tamaño o referencia LDraw.</p></div><dl class="shortcuts">${[['B / V','Construir / seleccionar'],['M / P / X','Mover / pintar / borrar'],['R','Girar 90°'],['Supr / Retroceso','Eliminar selección'],['Ctrl o ⌘ + D','Duplicar selección'],['Ctrl o ⌘ + Z','Deshacer'],['Ctrl o ⌘ + Shift + Z','Rehacer'],['Ctrl o ⌘ + S','Guardar una copia'],['F','Centrar la cámara'],['Esc','Cancelar movimiento o selección']].map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join('')}</dl><p class="field-help">Las dimensiones son nominales. Bricklab es un prototipo independiente de construcción; no calcula resistencia, tolerancias de fabricación ni disponibilidad de piezas comerciales.</p>`);}
 
 const actions={
-  new:showNew,blank:()=>load({format:'bricklab',version:1,name:'Mi nueva construcción',size:32,pieces:[]}),demo:()=>load(demoProject()),
+  'part-info':()=>showPartInfo(), 'selection-info':()=>showPartInfo(selectedId?selected().part:partId),credits:showCredits,
+  new:showNew,blank:()=>load({format:'bricklab',version:FORMAT_VERSION,name:'Mi nueva construcción',size:32,pieces:[]}),demo:()=>load(demoProject()),
   library:showLibrary,export:showExport,inventory:showInventory,settings:showSettings,help:showHelp,
   'close-dialog':closeDialog,'toggle-catalog':()=>$('#catalog-panel').classList.toggle('is-open'),
   save:()=>{try{saveProject(project);toast('Copia guardada en Mis proyectos.');}catch(e){toast('No se pudo guardar. Exporta el proyecto como JSON para conservarlo.',true);}},
@@ -171,7 +196,7 @@ const actions={
   'export-json':()=>download(new Blob([JSON.stringify(project,null,2)],{type:'application/json'}),'json'),
   'export-png':()=>{if(!scene)return toast('La vista 3D no está disponible.',true);download(scene.capture(),'png');},
   'export-glb':async()=>{if(!scene)return toast('La vista 3D no está disponible.',true);if(!project.pieces.length)return toast('Añade alguna pieza antes de exportar.');toast('Preparando el modelo 3D…');try{const buffer=await scene.exportGLB();download(new Blob([buffer],{type:'model/gltf-binary'}),'glb');toast('Modelo 3D exportado.');}catch(e){toast('No se ha podido exportar el modelo 3D. Conserva una copia JSON.',true);}},
-  'export-csv':()=>{const rows=[['Pieza','Color','Hex','Cantidad'],...inventory(project.pieces).map(r=>[PART_MAP[r.part].name,COLORS.find(c=>c.hex===r.color)?.name||r.color,r.color,r.count])];download(new Blob(['\ufeff'+rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'csv');},
+  'export-csv':()=>{const rows=[['Referencia LDraw','Pieza','Color','Hex','Cantidad'],...inventory(project.pieces).map(r=>[r.part,PART_MAP[r.part].name,COLORS.find(c=>c.hex===r.color)?.name||r.color,r.color,r.count])];download(new Blob(['\ufeff'+rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'csv');},
   undo:()=>undo(),redo:()=>undo(true),rotate,'rotate-selection':rotateSelected,
   deselect:()=>{cancelMove();setSelected(null);updateDock();},
   'move-selection':()=>beginMove(selected()),
@@ -190,13 +215,13 @@ document.addEventListener('click',async e=>{
   const el=e.target.closest('button');if(!el)return;
   if(el.dataset.action){await actions[el.dataset.action]?.();return;}
   if(el.dataset.mode){setMode(el.dataset.mode);return;}
-  if(el.dataset.part){partId=el.dataset.part;rotation=0;setMode('build');renderCatalog();$('#catalog-panel').classList.remove('is-open');return;}
+  if(el.dataset.part){partId=el.dataset.part;rotation=0;setMode('build');renderCatalog();$('#catalog-panel').classList.remove('is-open');try{await ensureGeometry(el.dataset.part);hover(lastHit);}catch(error){toast(error.message,true);}return;}
   if(el.dataset.color){color=el.dataset.color;if(mode==='select'&&selected())editPieces(project.pieces.map(p=>p.id===selectedId?{...p,color}:p));updateDock();hover(lastHit);return;}
-  if(el.dataset.category){category=el.dataset.category;document.querySelectorAll('[data-category]').forEach(b=>{b.classList.toggle('active',b.dataset.category===category);b.setAttribute('aria-pressed',String(b.dataset.category===category));});renderCatalog();return;}
   if(el.dataset.view){scene?.view(el.dataset.view);return;}
-  if(el.dataset.load){try{const entry=listProjects().find(p=>p.id===el.dataset.load);if(entry)load(entry.project);}catch(error){toast('No se pudo abrir el proyecto.',true);}return;}
+  if(el.dataset.load){try{const entry=listProjects().find(p=>p.id===el.dataset.load);if(entry)await load(entry.project);}catch(error){toast('No se pudo abrir el proyecto.',true);}return;}
   if(el.dataset.remove){const id=el.dataset.remove;openDialog('¿Borrar esta copia?',`<p class="dialog-intro">Se eliminará de Mis proyectos. La construcción que tienes abierta se conserva.</p><button class="danger wide" id="confirm-remove">Borrar copia</button>`);$('#confirm-remove').onclick=()=>{try{removeProject(id);showLibrary();}catch(error){toast('No se pudo borrar la copia.',true);}};}
 });
+$('#category-filter').addEventListener('change',e=>{category=e.target.value;renderCatalog();$('#parts-grid').scrollTop=0;});
 $('#search').addEventListener('input',e=>{filter=e.target.value;renderCatalog();});
 $('#project-name').addEventListener('change',e=>{const name=e.target.value.trim()||'Sin título';if(name!==project.name)commit({...project,name});else e.target.value=name;});
 $('#dialog').addEventListener('click',e=>{if(e.target===$('#dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeDialog();}});
@@ -208,11 +233,11 @@ document.addEventListener('change',e=>{
   if(e.target.id==='grid-toggle')scene?.toggleGrid(e.target.checked);
   if(e.target.id==='floating-toggle')allowFloating=e.target.checked;
   if(e.target.id==='layer-toggle'){$('#manual-layer').disabled=!e.target.checked;manualLayer=e.target.checked?Number($('#manual-layer').value):null;if(scene)scene.manualLayer=manualLayer;}
-  if(e.target.id==='manual-layer'){const n=Number(e.target.value);if(!Number.isInteger(n)||n<0||n>299){e.target.value=manualLayer??0;return;}manualLayer=n;if(scene)scene.manualLayer=n;}
+  if(e.target.id==='manual-layer'){const n=Number(e.target.value);if(!Number.isInteger(n*2)||n<0||n>299){e.target.value=manualLayer??0;return;}manualLayer=n;if(scene)scene.manualLayer=n;}
 });
 $('#import-file').addEventListener('change',async e=>{
   const file=e.target.files?.[0];if(!file)return;
-  try{if(file.size>5*1024*1024)throw new Error('El archivo supera el límite de 5 MB.');const next=parseProject(JSON.parse(await file.text()));load(next);toast('Proyecto importado.');}catch(error){toast(error instanceof SyntaxError?'El archivo no contiene un JSON válido.':error.message,true);}finally{e.target.value='';}
+  try{if(file.size>5*1024*1024)throw new Error('El archivo supera el límite de 5 MB.');const next=parseProject(JSON.parse(await file.text()));await load(next);toast('Proyecto importado.');}catch(error){toast(error instanceof SyntaxError?'El archivo no contiene un JSON válido.':error.message,true);}finally{e.target.value='';}
 });
 document.addEventListener('keydown',e=>{
   if(e.target.closest('input,textarea,select,[contenteditable="true"]')||$('#dialog').open)return;
@@ -227,6 +252,12 @@ document.addEventListener('keydown',e=>{
 });
 window.addEventListener('pagehide',()=>{if(!autosavePaused){try{saveAutosave(project);}catch(e){/* the visible save indicator reports failures while the page is active */}}});
 
-try{scene=new BuilderScene($('#stage'),{onHover:hover,onClick:clickScene});thumbs=renderThumbnails();}catch(error){console.error('3D initialization failed',error);$('#webgl-error').hidden=false;}
-renderCatalog();renderState();scene?.view('iso');refreshIcons();
+renderCatalog();renderState();refreshIcons();
+try{
+  await ensureGeometries([...project.pieces.map(p=>p.part),partId]);
+  scene=new BuilderScene($('#stage'),{onHover:hover,onClick:clickScene});
+  scene.sync(project.pieces);scene.view('iso');
+  try{thumbnailRenderer=createThumbnailRenderer();observeThumbnails();renderCatalog();}catch(error){toast('No se pudieron generar las miniaturas. El editor 3D sigue disponible.',true);}
+}catch(error){console.error('3D initialization failed',error);$('#webgl-error').hidden=false;}
+finally{$('#loading-model').hidden=true;}
 if(storageError)toast(storageError,true);

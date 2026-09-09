@@ -1,51 +1,12 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
-import {PART_MAP, PARTS, PLATE_HEIGHT as H, dimensions} from './catalog.js';
+import {PART_MAP, PLATE_HEIGHT as H, dimensions} from './catalog.js';
 import {bounds} from './model.js';
+import {brickGroup,disposeGroup,ensureGeometries,ensureGeometry} from './geometry.js';
+import {modelAttribution,pngWithAttribution} from './attribution.js';
 
-const geometryCache=new Map();
-function box(w,h,d,rounded=true){
-  const key=`${w}/${h}/${d}/${rounded}`;
-  if(!geometryCache.has(key)) geometryCache.set(key,rounded?new RoundedBoxGeometry(w,h,d,2,0.025):new THREE.BoxGeometry(w,h,d));
-  return geometryCache.get(key);
-}
 const studGeo=new THREE.CylinderGeometry(.295,.305,.17,20);
-const tubeGeo=new THREE.CylinderGeometry(.31,.31,1,16,1,true);
-function brickGroup(piece,{ghost=false,valid=true}={}){
-  const p=PART_MAP[piece.part],{w,d,h}=dimensions(piece),height=h*H;
-  const group=new THREE.Group();
-  const material=new THREE.MeshStandardMaterial({color:ghost?(valid?'#72bb82':'#ef6867'):piece.color,roughness:.29,metalness:.015,transparent:ghost,opacity:ghost?.48:1,depthWrite:!ghost});
-  function mesh(geo,x,y,z){const m=new THREE.Mesh(geo,material);m.position.set(x,y,z);m.castShadow=!ghost;m.receiveShadow=true;m.userData.pieceId=piece.id;group.add(m);return m;}
-  // Open underside, with a top skin and four side walls.
-  const wall=.13,top=.14;
-  mesh(box(w-.045,top,d-.045),w/2,height-top/2,d/2);
-  const sideH=height-top;
-  mesh(box(w-.045,sideH,wall),w/2,sideH/2,wall/2+.0225);
-  mesh(box(w-.045,sideH,wall),w/2,sideH/2,d-wall/2-.0225);
-  mesh(box(wall,sideH,d-.045-wall*2),wall/2+.0225,sideH/2,d/2);
-  mesh(box(wall,sideH,d-.045-wall*2),w-wall/2-.0225,sideH/2,d/2);
-  if(p.studs){
-    const studs=new THREE.InstancedMesh(studGeo,material,w*d),matrix=new THREE.Matrix4();
-    for(let x=0,i=0;x<w;x++)for(let z=0;z<d;z++,i++){matrix.makeTranslation(x+.5,height+.075,z+.5);studs.setMatrixAt(i,matrix);}
-    studs.userData.pieceId=piece.id;studs.castShadow=!ghost;studs.receiveShadow=true;group.add(studs);
-  }
-  // Underside reinforcement tubes; kept hollow for inspection from below.
-  if(w>1 && d>1){
-    const tubes=new THREE.InstancedMesh(tubeGeo,material,(w-1)*(d-1)),matrix=new THREE.Matrix4();
-    for(let x=1,i=0;x<w;x++)for(let z=1;z<d;z++,i++){
-      matrix.compose(new THREE.Vector3(x,sideH/2,z),new THREE.Quaternion(),new THREE.Vector3(1,sideH,1));tubes.setMatrixAt(i,matrix);
-    }
-    tubes.userData.pieceId=piece.id;group.add(tubes);
-  }
-  group.position.set(piece.x,piece.y*H,piece.z);group.userData.pieceId=piece.id;
-  return group;
-}
-function disposeGroup(group){
-  const materials=new Set();group.traverse(o=>{if(o.material)materials.add(o.material);if(o.isInstancedMesh)o.dispose();});
-  materials.forEach(m=>m.dispose());group.removeFromParent();
-}
 
 export class BuilderScene {
   constructor(container,{onHover,onClick,onReady}){
@@ -150,9 +111,10 @@ export class BuilderScene {
     const ghost=this.ghost?.visible,outline=this.outline?.visible;
     if(this.ghost)this.ghost.visible=false;if(this.outline)this.outline.visible=false;
     this.renderer.render(this.scene,this.camera);const url=this.renderer.domElement.toDataURL('image/png');
-    if(this.ghost)this.ghost.visible=ghost;if(this.outline)this.outline.visible=outline;return url;
+    if(this.ghost)this.ghost.visible=ghost;if(this.outline)this.outline.visible=outline;return pngWithAttribution(url,modelAttribution(this.pieces));
   }
   async exportGLB(){
+    await ensureGeometries(this.pieces.map(p=>p.part));
     const group=new THREE.Group();
     // Normal meshes ensure portable GLB even in viewers without instancing support.
     for(const piece of this.pieces){
@@ -164,19 +126,30 @@ export class BuilderScene {
     }
     // 1 stud = 8 mm; glTF units are metres.
     group.scale.setScalar(.008);
+    group.userData.ldraw=modelAttribution(this.pieces);
     try{return await new GLTFExporter().parseAsync(group,{binary:true});}finally{disposeGroup(group);}
   }
 }
 
-export function renderThumbnails(){
-  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setSize(150,104);renderer.setPixelRatio(1.5);
+export function createThumbnailRenderer(){
+  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setSize(160,112);renderer.setPixelRatio(1);
   renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;
-  const scene=new THREE.Scene();scene.add(new THREE.HemisphereLight('#ffffff','#718392',3));const light=new THREE.DirectionalLight('#ffffff',4);light.position.set(-3,8,5);scene.add(light);
-  const camera=new THREE.OrthographicCamera(-4,4,2.8,-2.8,.1,100),result={};
-  for(const part of PARTS){
-    const p={id:'thumb',part:part.id,color:'#e8edf1',rotation:90,x:0,y:0,z:0};const {w,d,h}=dimensions(p),group=brickGroup(p);scene.add(group);
-    const s=Math.max(w,d,3)*.68;camera.left=-s;camera.right=s;camera.top=s*104/150;camera.bottom=-camera.top;camera.updateProjectionMatrix();
-    const center=new THREE.Vector3(w/2,h*H/2,d/2);camera.position.copy(center).add(new THREE.Vector3(8,7,10));camera.lookAt(center);renderer.render(scene,camera);result[part.id]=renderer.domElement.toDataURL();disposeGroup(group);
-  }
-  renderer.dispose();renderer.forceContextLoss();return result;
+  const scene=new THREE.Scene();scene.add(new THREE.HemisphereLight('#ffffff','#718392',3));
+  const light=new THREE.DirectionalLight('#ffffff',4);light.position.set(-3,8,5);scene.add(light);
+  const camera=new THREE.PerspectiveCamera(30,160/112,.01,200);
+  // One renderer and a serial queue avoid opening a WebGL context per thumbnail.
+  let queue=Promise.resolve();
+  return part=>{
+    const job=queue.then(async()=>{
+      await ensureGeometry(part.id);
+      const piece={id:'thumb',part:part.id,color:'#e8edf1',rotation:0,x:0,y:0,z:0};
+      const group=brickGroup(piece);scene.add(group);group.updateMatrixWorld(true);
+      const box=new THREE.Box3().setFromObject(group),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
+      const distance=Math.max(size.x,size.y,size.z,1)*3.1;
+      camera.position.copy(center).add(new THREE.Vector3(1,.85,1.1).normalize().multiplyScalar(distance));camera.lookAt(center);
+      renderer.render(scene,camera);const url=renderer.domElement.toDataURL();disposeGroup(group);
+      await new Promise(resolve=>requestAnimationFrame(resolve));return url;
+    });
+    queue=job.catch(()=>{});return job;
+  };
 }

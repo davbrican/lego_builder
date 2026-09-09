@@ -31,16 +31,16 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 
 ## Qué puedes hacer
 
-- Construir con **27 piezas**: 11 ladrillos, 11 placas y 5 baldosas, con 16 colores.
+- Construir con **145 piezas LDraw** en 10 categorías, con 16 colores de libre elección.
 - Orbitar, acercar, desplazar y cambiar a vistas superior, frontal e isométrica.
-- Previsualizar el encaje, girar 90°, apilar y detectar solapamientos.
+- Previsualizar el encaje en tetones reales, girar 90°, apilar y detectar solapamientos con perfiles de forma.
 - Seleccionar, mover, duplicar, pintar o borrar piezas y editar sus coordenadas.
 - Deshacer y rehacer hasta 80 cambios, incluyendo cambios de proyecto y de base.
 - Cambiar la base entre 16, 32, 48 y 64 tetones por lado.
 - Construir a altura automática o fijar una capa; permitir piezas flotantes para bocetar.
 - Recuperar la última sesión automáticamente y guardar varias copias en Mis proyectos.
 - Importar y exportar proyectos JSON, capturas PNG, modelos GLB y listas de piezas CSV.
-- Consultar dimensiones nominales e inventario por pieza y color.
+- Buscar por referencia LDraw, nombre o dimensiones; consultar la ficha y exportar un inventario con referencia, color y cantidad.
 
 ## Controles
 
@@ -67,17 +67,69 @@ En una pantalla táctil: toca para colocar, arrastra un dedo para orbitar y usa 
 
 El autoguardado y Mis proyectos usan **localStorage**, en el navegador y origen desde el que accedas. No se guardan en el contenedor. Cambiar de navegador, puerto, equipo, `localhost` a una IP o borrar los datos del sitio crea una colección diferente. Detener o reconstruir Docker no borra los datos del navegador.
 
-Usa **Exportar → Proyecto editable** para conservar una copia independiente o pasarla a otro dispositivo; impórtala desde Mis proyectos. El GLB es una exportación de geometría para herramientas externas, no el formato editable de Bricklab. Las exportaciones incluyen solo las piezas; la captura PNG también muestra la base. Los archivos GLB usan metros, con un tetón equivalente a 8 mm.
+Usa **Exportar → Proyecto editable** para conservar una copia independiente o pasarla a otro dispositivo; impórtala desde Mis proyectos. El GLB es una exportación de geometría para herramientas externas, no el formato editable de Bricklab. El GLB conserva autores, referencias y licencias en sus metadatos `extras`; el PNG los incluye en un bloque estándar `iTXt`. Las exportaciones incluyen solo las piezas; la captura PNG también muestra la base. Los archivos GLB usan metros, con un tetón equivalente a 8 mm.
 
-El JSON tiene formato `bricklab`, versión `1`, nombre, tamaño de base y una lista de piezas con `id`, `part`, `color`, `rotation`, `x`, `y`, `z`. La importación comprueba formato, tipos, límites y colisiones. Los modelos con piezas flotantes se pueden importar y se señalan en el editor.
+El JSON tiene formato `bricklab`, versión `2`, nombre, tamaño de base y una lista de piezas con `id`, `part`, `color`, `rotation`, `x`, `y`, `z`. La importación comprueba formato, tipos, límites y colisiones. Los modelos con piezas flotantes se pueden importar y se señalan en el editor.
+
+## Catálogo de piezas reales
+
+Se usa una selección revisada de la **biblioteca comunitaria LDraw, edición 2026-08**. Los modelos representan piezas reales de LEGO; LDraw no es una biblioteca publicada ni avalada por LEGO Group. Se incluyen los archivos originales y sus licencias. El selector muestra la referencia LDraw exacta (incluido el sufijo de molde cuando existe), el nombre traducido y la descripción original en la ficha.
+
+| Categoría | Piezas |
+| --- | ---: |
+| Ladrillos | 24 |
+| Placas | 28 |
+| Baldosas | 13 |
+| Pendientes | 22 |
+| Curvas | 10 |
+| Redondas | 18 |
+| Arcos | 7 |
+| Ventanas y vallas | 8 |
+| Technic | 8 |
+| Ruedas | 7 |
+
+Las geometrías se descargan desde tu propio contenedor cuando son necesarias. Las miniaturas usan una cola y un único renderizador; no se abren 145 contextos WebGL ni se cargan todas las piezas antes de entrar al taller. Los archivos se almacenan en caché con su hash de contenido.
+
+En la ficha puedes abrir el [archivo original de LDraw](https://library.ldraw.org/) o buscar la referencia en [LEGO Pick a Brick](https://www.lego.com/es-es/pick-and-build/pick-a-brick). La selección de colores es creativa: **no certifica que esa combinación de pieza/color exista o esté a la venta**. Algunas referencias son variantes históricas de molde. El catálogo no consulta precios ni existencias.
 
 ## Encaje y alcance de esta versión
 
-Las coordenadas X/Z se expresan en tetones; Y en placas. Una placa equivale a 3,2 mm y un ladrillo a tres placas. Las dimensiones mostradas corresponden al cuerpo nominal, sin sumar los tetones superiores.
+Las coordenadas X/Z se expresan en tetones; Y en placas. Se admiten medios tetones y medias placas. Una placa equivale a 3,2 mm y el ladrillo básico a tres placas. La geometría LDraw usa 20 unidades por tetón y 8 por placa. La transformación al editor mantiene las proporciones del archivo fuente.
 
-Una pieza se conecta por sus tetones a la base o a otra pieza conectada. Se permiten voladizos y uniones por debajo de una pieza; el contacto lateral no se considera unión. Las baldosas tienen la cara superior lisa. Si eliminas un apoyo, las piezas restantes no caen: el editor avisa de las que pierden conexión con la base.
+El encaje al apuntar a una pieza busca el tetón superior más cercano y alinea un hueco receptor de la pieza nueva. Esto permite colocar un ladrillo de 1 × 1 sobre el tetón central de un cono de 2 × 2, desplazándolo medio tetón. Las pendientes solo transmiten conexión por sus tetones; las superficies lisas no inventan conexiones. Las uniones se vuelven a calcular al borrar o mover apoyos.
 
-Es un **editor geométrico inicial**, no un simulador de resistencia o CAD de fabricación. No evalúa estabilidad, cargas, tolerancias, fricción ni montabilidad de la secuencia. El catálogo todavía no incluye pendientes, bisagras, ejes, ruedas, minifiguras ni el catálogo completo de LEGO/LDraw; tampoco realiza compras o colaboración multiusuario. Las formas y colores son aproximaciones propias y no llevan referencias comerciales oficiales. Los modelos admiten como límite de protección 2.000 piezas; el rendimiento depende de la GPU y de la complejidad. Los GLB grandes pueden tardar en exportarse.
+Las colisiones usan perfiles de columnas de **1/4 de tetón (2 mm)**, obtenidos de la geometría del cuerpo sin los tetones estándar. Se conserva el espacio libre bajo los arcos y en las esquinas. Es una aproximación conservadora al volumen exterior: puede rechazar encajes ajustados, huecos laterales o montajes especiales. Los huecos receptores se infieren de la base de cada pieza y se revisan explícitamente para arcos y piezas con tetones integrados; no son un catálogo oficial de conexiones mecánicas.
+
+**Ruedas, neumáticos y llantas** son piezas individuales: se pueden colocar sobre la base o en modo libre. Todavía no se simulan encajes de ejes y pasadores, giro de ruedas, bisagras, conexiones laterales Technic ni estabilidad o resistencia. Tampoco se comprueba la secuencia física de montaje. Las piezas sin conexión se señalan y no caen por gravedad. El límite de protección es de 2.000 piezas; el rendimiento depende de la GPU y de la geometría elegida.
+
+Esta versión usa proyectos y almacenamiento local **v2**. El prototipo v1 se descarta intencionadamente durante esta fase de desarrollo, sin migraciones ni alias de sus 27 piezas procedurales.
+
+## Fuentes, autores y regeneración
+
+- [Biblioteca LDraw](https://library.ldraw.org/) y [descarga oficial de la biblioteca LDraw](https://library.ldraw.org/updates?latest=).
+- `public/ldraw/attribution.json`: autores, fuentes y licencias por pieza y dependencias.
+- `public/ldraw/CAreadme.txt`, `CAlicense.txt`, `CAlicense4.txt`: condiciones originales CC BY 2.0 y/o CC BY 4.0.
+- `scripts/ldraw-sources.json`: copia local de las 499 definiciones necesarias, con sus cabeceras originales. Solo se han normalizado las rutas de subarchivos.
+- `scripts/build-ldraw.mjs`: triangula con Three.js, convierte ejes y unidades, indexa la geometría y genera perfiles y metadatos. Las aristas gráficas LDraw se omiten y los colores se sustituyen por el elegido en el editor.
+
+Las geometrías ya vienen generadas: **Docker no necesita acceder a LDraw**. Para regenerarlas a partir de las fuentes incluidas:
+
+```bash
+npm ci
+npm run catalog:build
+npm test
+npm run build
+```
+
+Para actualizar la fuente, descarga explícitamente `complete.zip` de LDraw, revisa la selección en `scripts/collect-ldraw.py`, ajusta la edición indicada al nuevo archivo y ejecuta:
+
+```bash
+python scripts/collect-ldraw.py /ruta/a/complete.zip
+npm run catalog:build
+npm test
+```
+
+La recogida verifica referencias y dependencias; las pruebas comprueban hashes, geometrías, rotaciones, conexiones, atribuciones y exportaciones. Ninguna de estas tareas necesita servicios externos durante la compilación normal.
 
 Proyecto independiente, sin afiliación con LEGO Group. LEGO es una marca de su titular.
 
@@ -98,14 +150,17 @@ npm run build
 npm run preview
 ```
 
-`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las pruebas cubren encaje, rotación, apoyos, baldosas, puentes, movimiento, validación de importación, el ejemplo, historial, inventario, persistencia y exportación GLB real. No sustituyen pruebas de interacción en el navegador.
+`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 19 pruebas cubren las 145 geometrías, conexiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
 
 ## Estructura
 
 | Archivo | Responsabilidad |
 | --- | --- |
-| `src/catalog.js` | Dimensiones y catálogo de piezas y colores |
-| `src/model.js` | Colisiones, conexiones, validación, historial e inventario |
+| `src/catalog.js` | Catálogo LDraw, búsqueda, colores y transformación de conectores |
+| `src/generated/parts.json` | 145 referencias con dimensiones, perfiles y atribución |
+| `src/geometry.js` | Carga local de geometrías con caché |
+| `src/placement.js` | Colisiones por forma y grafo de conexiones |
+| `src/model.js` | Validación, historial e inventario |
 | `src/scene.js` | Escena Three.js, geometría, cámara, selección y exportación GLB |
 | `src/storage.js` | Autoguardado y copias locales |
 | `src/main.js` | Interfaz y acciones del editor |

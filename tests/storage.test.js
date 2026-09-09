@@ -12,6 +12,6 @@ test('autosave and named snapshots round trip independently; deleting one preser
     saveProject(p);saveProject({...p,name:'Otra versión'});
     assert.equal(listProjects().length,2);const entry=listProjects()[0];removeProject(entry.id);
     assert.equal(listProjects()[0].project.name,p.name);assert.deepEqual(loadAutosave(),p);
-    data.set('bricklab.autosave.v1','bad json');assert.throws(loadAutosave);
+    data.set('bricklab.autosave.v2','bad json');assert.throws(loadAutosave);
   }finally{delete globalThis.localStorage;}
 });

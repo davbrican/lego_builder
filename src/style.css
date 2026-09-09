@@ -1291,3 +1291,123 @@ td:last-child,th:last-child {
 .categories button, .part-card strong, .section-title h2, .position-apply, .view-controls button, .build-dock>button {
   font-size: 14px;
 }
+
+/* Searchable LDraw catalogue */
+.category-filter {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 15px 20px 13px;
+  font-size: 14px;
+  color: #aeb9c4;
+}
+.category-filter select {
+  width: 100%;
+  padding: 9px 7px;
+  border: 1px solid #46515f;
+  border-radius: 7px;
+  background: #252e38;
+  color: #edf2f6;
+  font-size: 14px;
+}
+.catalog-info {
+  color: #efd08a;
+  font-size: 12px;
+  padding: 0;
+}
+.part-card {
+  min-height: 151px;
+  justify-content: flex-start;
+  padding: 4px 8px 12px;
+}
+.part-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 78px;
+  color: #93a4b5;
+  font-size: 12px;
+}
+.part-preview img {
+  height: 78px;
+  width: 100%;
+  object-fit: contain;
+}
+.part-card strong {
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 500;
+  min-height: 38px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.part-reference {
+  font-variant-numeric: tabular-nums;
+  color: #b8c7d4;
+  font-size: 12px;
+  margin-top: 5px;
+}
+.catalog-footer {
+  border-radius: 0;
+  justify-content: flex-start;
+  color: #b3c0cc;
+  min-height: 40px;
+}
+.reference-link {
+  color: #586c78;
+  font-size: 12px;
+  padding: 0 0 12px;
+}
+.part-detail-preview {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 15px;
+  padding: 8px 18px;
+  background: #34414f;
+  border-radius: 10px;
+}
+.part-detail-preview img {
+  width: 160px;
+  height: 112px;
+  object-fit: contain;
+}
+.source-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 22px 0;
+}
+.source-links a,.inline-link {
+  color: #f1cd7e;
+  font-size: 14px;
+  text-underline-offset: 3px;
+}
+.inline-link {
+  padding: 0;
+  text-decoration: underline;
+}
+.loading-model {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  color: #3b4e5d;
+  background: #dbe3e8ee;
+  font-size: 16px;
+  z-index: 5;
+}
+.selection-card {
+  max-height: calc(100% - 280px);
+  overflow-y: auto;
+}
+@media (max-width: 760px) {
+  .category-filter { margin: 12px 18px; }
+  .part-detail-preview { padding: 8px; gap: 10px; }
+  .part-detail-preview img { width: 115px; }
+  .catalog-footer { display: flex; }
+}

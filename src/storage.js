@@ -1,5 +1,5 @@
-import {parseProject} from './model.js';
-const AUTO='bricklab.autosave.v1', LIBRARY='bricklab.projects.v1';
+import {parseProject,uid} from './model.js';
+const AUTO='bricklab.autosave.v2', LIBRARY='bricklab.projects.v2';
 export function loadAutosave(){const s=localStorage.getItem(AUTO);return s?parseProject(JSON.parse(s)):null;}
 export function saveAutosave(project){localStorage.setItem(AUTO,JSON.stringify(project));}
 export function listProjects(){
@@ -9,7 +9,7 @@ export function listProjects(){
 }
 export function saveProject(project){
   const entries=listProjects();
-  entries.unshift({id:crypto.randomUUID(),updated:new Date().toISOString(),project:structuredClone(project)});
+  entries.unshift({id:uid(),updated:new Date().toISOString(),project:structuredClone(project)});
   localStorage.setItem(LIBRARY,JSON.stringify(entries));
 }
 export function removeProject(id){localStorage.setItem(LIBRARY,JSON.stringify(listProjects().filter(p=>p.id!==id)));}
