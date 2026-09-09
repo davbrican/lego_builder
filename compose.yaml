@@ -1,0 +1,6 @@
+services:
+  lego-builder:
+    build: .
+    ports:
+      - "8098:80"
+    restart: unless-stopped
