@@ -84,6 +84,14 @@ export class BuilderScene {
     if(this.ghost){disposeGroup(this.ghost);this.ghost=null;}
     if(piece){this.ghost=brickGroup(piece,{ghost:true,valid});this.scene.add(this.ghost);}
   }
+  setGrabMarker(point){
+    if(!point){if(this.grabMarker)this.grabMarker.visible=false;return;}
+    if(!this.grabMarker){
+      this.grabMarker=new THREE.Mesh(new THREE.SphereGeometry(.13,12,8),new THREE.MeshBasicMaterial({color:'#ffb800',depthTest:false}));
+      this.grabMarker.renderOrder=20;this.scene.add(this.grabMarker);
+    }
+    this.grabMarker.visible=true;this.grabMarker.position.set(point[0],point[1]*H,point[2]);
+  }
   inspectPointer(){
     if(!this.lastEvent)return null;
     const rect=this.renderer.domElement.getBoundingClientRect();
@@ -108,10 +116,10 @@ export class BuilderScene {
   zoom(factor){const offset=this.camera.position.clone().sub(this.controls.target);offset.multiplyScalar(factor);offset.clampLength(this.controls.minDistance,this.controls.maxDistance);this.camera.position.copy(this.controls.target).add(offset);this.controls.update();}
   toggleGrid(visible){this.grid.visible=visible;this.baseStuds.visible=visible;}
   capture(){
-    const ghost=this.ghost?.visible,outline=this.outline?.visible;
-    if(this.ghost)this.ghost.visible=false;if(this.outline)this.outline.visible=false;
+    const ghost=this.ghost?.visible,outline=this.outline?.visible,grip=this.grabMarker?.visible;
+    if(this.ghost)this.ghost.visible=false;if(this.outline)this.outline.visible=false;if(this.grabMarker)this.grabMarker.visible=false;
     this.renderer.render(this.scene,this.camera);const url=this.renderer.domElement.toDataURL('image/png');
-    if(this.ghost)this.ghost.visible=ghost;if(this.outline)this.outline.visible=outline;return pngWithAttribution(url,modelAttribution(this.pieces));
+    if(this.ghost)this.ghost.visible=ghost;if(this.outline)this.outline.visible=outline;if(this.grabMarker)this.grabMarker.visible=grip;return pngWithAttribution(url,modelAttribution(this.pieces));
   }
   async exportGLB(){
     await ensureGeometries(this.pieces.map(p=>p.part));

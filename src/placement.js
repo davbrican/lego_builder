@@ -73,11 +73,28 @@ export function placementError(candidate,pieces,size,{allowFloating=false,ignore
   }
   return null;
 }
-export function candidateFromHit(template,hit){
+export const GRAB_ANCHORS=[
+  {id:'center',label:'Centro'},
+  {id:'min-min',label:'Esquina X− Z−'},
+  {id:'max-min',label:'Esquina X+ Z−'},
+  {id:'max-max',label:'Esquina X+ Z+'},
+  {id:'min-max',label:'Esquina X− Z+'},
+];
+export function grabPoint(template,anchor='center'){
+  const part=PART_MAP[template.part],d=dimensions(template);
+  const [sideX,sideZ]=anchor.split('-');
+  const target=anchor==='center'?[d.w/2,0,d.d/2]:[sideX==='min'?.5:d.w-.5,0,sideZ==='min'?.5:d.d-.5];
+  const receivers=part.bottom.map(p=>rotatePoint(p,part,template.rotation));
+  if(!receivers.length)return target;
+  return receivers.reduce((a,b)=>Math.hypot(a[0]-target[0],a[2]-target[2])<=Math.hypot(b[0]-target[0],b[2]-target[2])?a:b);
+}
+export function candidateFromHit(template,hit,{anchor='center'}={}){
   const part=PART_MAP[template.part],d=dimensions(template);
   const result={...template,x:Math.floor(hit.point.x)-Math.floor(d.w/2),z:Math.floor(hit.point.z)-Math.floor(d.d/2),y:hit.layer??0};
-  if(hit.layer!==undefined){result.x=Math.round((hit.point.x-d.w/2)*2)/2;result.z=Math.round((hit.point.z-d.d/2)*2)/2;return result;}
+  const grip=grabPoint(template,anchor);
+  if(hit.layer!==undefined){result.x=Math.round((hit.point.x-(anchor==='center'?d.w/2:grip[0]))*2)/2;result.z=Math.round((hit.point.z-(anchor==='center'?d.d/2:grip[2]))*2)/2;return result;}
   if(!hit.piece){
+    if(anchor!=='center')return {...result,x:Math.floor(hit.point.x)+.5-grip[0],z:Math.floor(hit.point.z)+.5-grip[2]};
     const socket=contactPoints({...template,x:0,y:0,z:0},'bottom')[0];
     if(socket){result.x+=.5-((socket[0]%1)+1)%1;result.z+=.5-((socket[2]%1)+1)%1;}
     return result;
@@ -86,8 +103,7 @@ export function candidateFromHit(template,hit){
   const receivers=part.bottom.map(p=>rotatePoint(p,part,template.rotation));
   if(studs.length&&receivers.length){
     const nearest=studs.reduce((a,b)=>Math.hypot(a[0]-hit.point.x,a[2]-hit.point.z)<=Math.hypot(b[0]-hit.point.x,b[2]-hit.point.z)?a:b);
-    const anchor=receivers.reduce((a,b)=>Math.hypot(a[0]-d.w/2,a[2]-d.d/2)<=Math.hypot(b[0]-d.w/2,b[2]-d.d/2)?a:b);
-    return {...result,x:nearest[0]-anchor[0],y:nearest[1]-anchor[1],z:nearest[2]-anchor[2]};
+    return {...result,x:nearest[0]-grip[0],y:nearest[1]-grip[1],z:nearest[2]-grip[2]};
   }
   result.y=hit.piece.y+dimensions(hit.piece).h;return result;
 }

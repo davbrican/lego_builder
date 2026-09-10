@@ -55,6 +55,11 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 | Mover / pintar / borrar | M / P / X |
 | Conjunto conectado | G |
 | Girar 90° | R |
+| Mover X/Z con precisión | Flechas (1 tetón); Shift + flechas (0,5) |
+| Subir / bajar | RePág / AvPág (1 placa); con Shift (0,5) |
+| Cambiar agarre: centro / esquinas | A o selector en Precisión |
+| Fijar posición / seguir al ratón | L |
+| Colocar la previsualización | Enter |
 | Duplicar selección | Ctrl/Cmd + D |
 | Eliminar selección | Supr o Retroceso |
 | Deshacer | Ctrl/Cmd + Z |
@@ -64,6 +69,18 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 | Cancelar movimiento o selección | Esc |
 
 En una pantalla táctil: toca para colocar, arrastra un dedo para orbitar y usa dos dedos para acercar o desplazar. El botón de menú abre el catálogo. Al mover una pieza, el primer clic la recoge y el siguiente confirma; Esc cancela sin modificarla.
+
+## Colocación precisa y anclajes de esquina
+
+En **Mover (M)** aparecen los controles de precisión automáticamente. Al construir una pieza nueva, ábrelos con **Precisión** junto al botón de giro.
+
+- Elige **Centro** o una de las cuatro **esquinas** como punto de agarre; **A** recorre las opciones. El punto amarillo marca el receptor que se alinea con el tetón que señalas. En piezas irregulares se utiliza el receptor real más cercano a esa esquina.
+- **Flechas** desplazan en X/Z un tetón; **RePág/AvPág** suben/bajan una placa. **Shift** reduce el paso a **0,5**. También hay botones X±/Y±/Z± y campos numéricos.
+- El primer ajuste por teclado o coordenadas **fija la posición**: ni mover el ratón ni orbitar la cámara sobrescriben el ajuste. **L** o «Volver a seguir el ratón» recupera el seguimiento normal.
+- **R** gira 90° manteniendo el punto de agarre cuando la posición está fijada. **Enter**, «Colocar» o un clic en la mesa confirman; **Esc/Cancelar** descartan el movimiento. Siguen comprobándose colisiones, límites y conexiones.
+- Los conjuntos también se pueden desplazar con estas teclas. Sus ajustes por teclado no activan el imán y conservan la confirmación antes de aplicar cambios.
+
+**Ejemplo: baldosa 6 × 6 en la esquina de una pared.** Busca `10202`, elige una esquina en Precisión y señala el tetón del extremo de la pared. La esquina de la baldosa se alinea con él, en lugar de centrar la baldosa sobre ese extremo. Ajusta con las flechas si hace falta y pulsa Enter.
 
 ## Construir por conjuntos y unirlos
 
@@ -170,12 +187,13 @@ npm run build
 npm run preview
 ```
 
-`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 27 pruebas cubren las 181 geometrías y los movimientos de conjuntos, además de conexiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
+`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 31 pruebas cubren las 181 geometrías, los movimientos de conjuntos y los anclajes y ajustes de precisión, además de conexiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
 
 ## Estructura
 
 | Archivo | Responsabilidad |
 | --- | --- |
+| `src/precision.js` | Previsualización fijada, pasos de teclado y giro sobre el punto de agarre |
 | `src/assemblies.js` | Selección conectada, transformaciones rígidas, encaje y borradores sin mutación |
 | `src/assembly-controls.js` | Ejes de desplazamiento, aro Y y previsualización del conjunto |
 | `src/catalog.js` | Catálogo LDraw, búsqueda, colores y transformación de conectores |

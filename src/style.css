@@ -1417,7 +1417,17 @@ td:last-child,th:last-child {
 .assembly-finish { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 .assembly-finish button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; }
 .assembly-finish button:disabled { opacity: .45; cursor: not-allowed; }
+.precision-card { width: 280px; }
+.precision-card p, .precision-card button, .precision-card label, .precision-card input, .precision-card select { font-size: 14px; }
+.precision-card .field-label { margin-top: 12px; }
+.precision-card #precision-feedback { color: #386143; }
+.precision-card #precision-feedback.invalid { color: #a63d3d; }
+.precision-nudges { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 10px; }
+.precision-nudges button { padding: 8px; background: #e5ebee; border-radius: 5px; }
 @media (max-width: 760px) {
+  .precision-card { width: min(245px, calc(100% - 75px)); top: 142px; max-height: calc(100% - 255px); }
+  .precision-card p { display: block; }
+  .build-dock [data-action="precision-toggle"] span { display: none; }
   .assembly-card { width: min(260px, calc(100% - 28px)); top: 142px; max-height: calc(100% - 255px); }
   .assembly-card p { display: block; }
   .category-filter { margin: 12px 18px; }
