@@ -1624,6 +1624,104 @@
       "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
     },
     {
+      "id": "11203",
+      "description": "Tile  2 x  2 Inverted",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/11203.dat",
+      "authors": [
+        "Rolf Osterthun [Rolf]",
+        "James Jessiman",
+        "Owen Burgoyne [C3POwen]",
+        "Willy Tschager [Holly-Wood]",
+        "Mark Kennedy [mkennedy]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/11203.dat",
+        "parts/s/11203s01.dat",
+        "p/stud2a.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring2.dat",
+        "p/stud2s2e.dat",
+        "p/4-4ring7.dat",
+        "p/box5.dat",
+        "p/box4.dat",
+        "p/box4-2p.dat",
+        "p/rect3.dat",
+        "p/rect.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "24246",
+      "description": "Tile  1 x  1 with Rounded End",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/24246.dat",
+      "authors": [
+        "Owen Burgoyne [C3POwen]",
+        "Magnus Forsberg [MagFors]",
+        "Chris Dee [cwdee]",
+        "Willy Tschager [Holly-Wood]",
+        "Max Martin Richter [MMR1988]",
+        "James Jessiman",
+        "Philippe Hurbain [Philo]",
+        "Niels Karsdorp [nielsk]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/24246.dat",
+        "parts/s/24246s01.dat",
+        "parts/s/24246s02.dat",
+        "p/2-4ring2.dat",
+        "p/box4-4a.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat",
+        "p/2-4chrd.dat",
+        "p/box3u4a.dat",
+        "p/2-4ring9.dat",
+        "p/2-4ring19.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "15712",
+      "description": "Tile  1 x  1 with Clip (Thick C-Clip)",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/15712.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Niels Karsdorp [nielsk]",
+        "J.C. Tchang [tchang]",
+        "Mark Kennedy [mkennedy]",
+        "Max Martin Richter [MMR1988]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/15712.dat",
+        "p/box4.dat",
+        "p/box5.dat",
+        "p/recte4.dat",
+        "p/1-4ndis.dat",
+        "p/1-16ndis.dat",
+        "p/5-8cylo.dat",
+        "p/5-8edge.dat",
+        "p/5-8cyli.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/1-4chrd.dat",
+        "p/box2-5.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
       "id": "3040b",
       "description": "Slope Brick 45  2 x  1",
       "sourceUrl": "https://library.ldraw.org/library/official/parts/3040b.dat",
@@ -4331,6 +4429,1266 @@
         "p/1-8cylo.dat",
         "p/1-8edge.dat",
         "p/1-8cyli.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "99206",
+      "description": "Plate  2 x  2 x  0.667 with Two Studs On Side and Two Raised with Closed Understud",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/99206.dat",
+      "authors": [
+        "J.C. Tchang [tchang]",
+        "Max Martin Richter [MMR1988]",
+        "Mark Kennedy [mkennedy]",
+        "Donald Sutter [technog]",
+        "Philippe Hurbain [Philo]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Willy Tschager [Holly-Wood]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/99206.dat",
+        "parts/s/99206s01.dat",
+        "p/3-16cyli.dat",
+        "p/3-16edge.dat",
+        "p/5-16edge.dat",
+        "p/stud4a.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/rect2p.dat",
+        "p/recte4.dat",
+        "p/box2-7.dat",
+        "p/box2-5.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat",
+        "p/rect.dat",
+        "p/rect3.dat",
+        "p/1-4chrd.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "4304",
+      "description": "Plate  2 x  2 x  0.667 with Two Studs On Side and Two Raised with Partial Closed Understud",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/4304.dat",
+      "authors": [
+        "Max Martin Richter [MMR1988]",
+        "Mark Kennedy [mkennedy]",
+        "Donald Sutter [technog]",
+        "Philippe Hurbain [Philo]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Willy Tschager [Holly-Wood]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/4304.dat",
+        "parts/s/99206s01.dat",
+        "p/3-16cyli.dat",
+        "p/3-16edge.dat",
+        "p/5-16edge.dat",
+        "p/stud4a.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/rect2p.dat",
+        "p/recte4.dat",
+        "p/box2-7.dat",
+        "p/box2-5.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat",
+        "p/1-8edge.dat",
+        "p/1-8cyli.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "87087",
+      "description": "Brick  1 x  1 with Stud on 1 Side",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/87087.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Tore Eriksson [Tore_Eriksson]",
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/87087.dat",
+        "p/box4t.dat",
+        "p/4-4ndis.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "11211",
+      "description": "Brick  1 x  2 with Two Studs on One Side",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/11211.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman",
+        "Tore Eriksson [Tore_Eriksson]",
+        "Steffen [Steffen]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/11211.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box4t.dat",
+        "p/4-4ndis.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat",
+        "p/stug-1x2.dat",
+        "p/stud.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "22885",
+      "description": "Brick  1 x  2 x  1.667 with Studs on 1 Side",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/22885.dat",
+      "authors": [
+        "Owen Burgoyne [C3POwen]",
+        "Niels Karsdorp [nielsk]",
+        "Willy Tschager [Holly-Wood]",
+        "Steffen [Steffen]",
+        "Donald Sutter [technog]",
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/22885.dat",
+        "p/box3u4a.dat",
+        "p/box3u6.dat",
+        "p/box2-5.dat",
+        "p/rect2p.dat",
+        "p/box5.dat",
+        "p/stug-1x2.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/stug2-2x2.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "4070",
+      "description": "Brick  1 x  1 with Headlight",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/4070.dat",
+      "authors": [
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/4070.dat",
+        "p/rect.dat",
+        "p/4-4edge.dat",
+        "p/4-4ndis.dat",
+        "p/4-4cyli.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "52107",
+      "description": "Brick  1 x  2 with Studs on Sides",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/52107.dat",
+      "authors": [
+        "Chris Dee [cwdee]",
+        "James Jessiman",
+        "Niels Karsdorp [nielsk]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/52107.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/stud3.dat",
+        "p/box3u2p.dat",
+        "p/4-4ndis.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "4733",
+      "description": "Brick  1 x  1 with Studs on Four Sides",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/4733.dat",
+      "authors": [
+        "James Jessiman",
+        "Santeri Piippo [arezey]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/4733.dat",
+        "p/box0.dat",
+        "p/4-4edge.dat",
+        "p/4-4ndis.dat",
+        "p/4-4cyli.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "47905",
+      "description": "Brick  1 x  1 with Studs on Two Opposite Sides",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/47905.dat",
+      "authors": [
+        "Sven Moritz Hein [smhltec]",
+        "James Jessiman",
+        "Niels Karsdorp [nielsk]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt",
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/47905.dat",
+        "p/4-4cyli.dat",
+        "p/4-4edge.dat",
+        "p/4-4ndis.dat",
+        "p/box3u2p.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "26604",
+      "description": "Brick  1 x  1 with Studs on Two Adjacent Sides",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/26604.dat",
+      "authors": [
+        "Niklas Buchmann [NiklasB]",
+        "James Jessiman",
+        "Mark Kennedy [mkennedy]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt",
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/26604.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/box3-3.dat",
+        "p/4-4ndis.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "2434",
+      "description": "Brick  2 x  4 x  2 with Studs on Sides",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/2434.dat",
+      "authors": [
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/2434.dat",
+        "p/stud4.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/box5.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "36840",
+      "description": "Bracket  1 x  1 -  1 x  1 Up",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/36840.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Willy Tschager [Holly-Wood]",
+        "Mark Kennedy [mkennedy]",
+        "Steffen [Steffen]",
+        "Max Martin Richter [MMR1988]",
+        "James Jessiman",
+        "Donald Sutter [technog]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/36840.dat",
+        "p/box4-2p.dat",
+        "p/rect3.dat",
+        "p/box4-4a.dat",
+        "p/recte4.dat",
+        "p/box2-7.dat",
+        "p/1-4chrd.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/rect2p.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "36841",
+      "description": "Bracket  1 x  1 -  1 x  1 Down",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/36841.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Tore Eriksson [Tore_Eriksson]",
+        "J.C. Tchang [tchang]",
+        "Steffen [Steffen]",
+        "Mark Kennedy [mkennedy]",
+        "Willy Tschager [Holly-Wood]",
+        "Max Martin Richter [MMR1988]",
+        "James Jessiman",
+        "Donald Sutter [technog]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/36841.dat",
+        "p/box4-1.dat",
+        "p/box5-1.dat",
+        "p/recte3.dat",
+        "p/rect3.dat",
+        "p/box2-7.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/1-4chrd.dat",
+        "p/rect2p.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "99780",
+      "description": "Bracket  1 x  2 -  1 x  2 Up",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/99780.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman",
+        "Willy Tschager [Holly-Wood]",
+        "Mark Kennedy [mkennedy]",
+        "Donald Sutter [technog]",
+        "Steffen [Steffen]",
+        "Max Martin Richter [MMR1988]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/99780.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box4-2p.dat",
+        "p/rect3.dat",
+        "p/rect2p.dat",
+        "p/box4-4a.dat",
+        "p/recte4.dat",
+        "p/box2-7.dat",
+        "p/1-4chrd.dat",
+        "p/1-4cylc.dat",
+        "p/1-4edge.dat",
+        "p/1-4disc.dat",
+        "p/1-4cyli.dat",
+        "p/box2-11.dat",
+        "p/stug-2x1.dat",
+        "p/stud.dat",
+        "p/stug2-1x2.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "99781",
+      "description": "Bracket  1 x  2 -  1 x  2 Down",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/99781.dat",
+      "authors": [
+        "Tim Gould [timgould]",
+        "James Jessiman",
+        "Tore Eriksson [Tore_Eriksson]",
+        "Willy Tschager [Holly-Wood]",
+        "Steffen [Steffen]",
+        "Max Martin Richter [MMR1988]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/99781.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box4-1.dat",
+        "p/box4-4a.dat",
+        "p/recte3.dat",
+        "p/box5-4a.dat",
+        "p/box4o8a.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/1-4chrd.dat",
+        "p/stug-1x2.dat",
+        "p/stud.dat",
+        "p/stug2-2x1.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "15573",
+      "description": "Plate  1 x  2 with Groove with 1 Centre Stud, without Understud",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/15573.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Willy Tschager [Holly-Wood]",
+        "Steffen [Steffen]",
+        "Chris Dee [cwdee]",
+        "Niels Karsdorp [nielsk]",
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/15573.dat",
+        "p/box3u6.dat",
+        "p/box2-5.dat",
+        "p/rect1.dat",
+        "p/box3u4a.dat",
+        "p/box4.dat",
+        "p/box5.dat",
+        "p/stud2.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "3794b",
+      "description": "Plate  1 x  2 with Groove with 1 Centre Stud",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/3794b.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/3794b.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box5.dat",
+        "p/box4.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "87580",
+      "description": "Plate  2 x  2 with Groove with 1 Centre Stud",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/87580.dat",
+      "authors": [
+        "Joerg Sommerer [Brickaneer]",
+        "Takeshi Takahashi [RainbowDolphin]",
+        "Willy Tschager [Holly-Wood]",
+        "James Jessiman"
+      ],
+      "licenses": [
+        "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt",
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/87580.dat",
+        "parts/3068b.dat",
+        "parts/s/3068bs01.dat",
+        "p/box4.dat",
+        "p/stud4.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/4-4disc.dat",
+        "p/4-4ndis.dat",
+        "p/stud2.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "18649",
+      "description": "Plate  1 x  2 with Handles on Opposite Ends",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/18649.dat",
+      "authors": [
+        "Owen Burgoyne [C3POwen]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Mark Kennedy [mkennedy]",
+        "Willy Tschager [Holly-Wood]",
+        "Donald Sutter [technog]",
+        "Gerald Lasser [GeraldLasser]",
+        "J.C. Tchang [tchang]",
+        "Max Martin Richter [MMR1988]",
+        "Philippe Hurbain [Philo]",
+        "Niels Karsdorp [nielsk]",
+        "Chris Dee [cwdee]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/18649.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box5.dat",
+        "p/stug-1x2.dat",
+        "p/stud.dat",
+        "p/4-4cylo.dat",
+        "p/box3u4p.dat",
+        "p/rect2p.dat",
+        "p/phandle1.dat",
+        "p/rect3.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat",
+        "p/2-4chrd.dat",
+        "p/3-16chrd.dat",
+        "p/1-4ndis.dat",
+        "p/1-16tang.dat",
+        "p/2-4ring2.dat",
+        "p/3-16ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "34103",
+      "description": "Plate  1 x  3 with  2 Studs Offset",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/34103.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Vincent Messenet [Cheenzo]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Willy Tschager [Holly-Wood]",
+        "Tore Eriksson [Tore_Eriksson]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/34103.dat",
+        "parts/s/34103s01.dat",
+        "p/box4.dat",
+        "p/recte3.dat",
+        "p/box3u6.dat",
+        "p/tri3a4.dat",
+        "p/box5.dat",
+        "p/box4t.dat",
+        "p/stug2-1x2.dat",
+        "p/stud2.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring2.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "35480",
+      "description": "Plate  1 x  2 with Round Ends and 2 Open Studs",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/35480.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman",
+        "Paul Easter [pneaster]",
+        "Max Martin Richter [MMR1988]",
+        "Chris Dee [cwdee]",
+        "Owen Burgoyne [C3POwen]",
+        "Steffen [Steffen]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/35480.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/2-4ring3.dat",
+        "p/2-4ring4.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat",
+        "p/2-4ring2.dat",
+        "p/2-4ndis.dat",
+        "p/stud2a.dat",
+        "p/4-4ring2.dat",
+        "p/box3u10p.dat",
+        "p/box2-11.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "61252",
+      "description": "Plate  1 x  1 with Clip Horizontal (Thick C-Clip)",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/61252.dat",
+      "authors": [
+        "Max Martin Richter [MMR1988]",
+        "James Jessiman",
+        "Magnus Forsberg [MagFors]",
+        "Niels Karsdorp [nielsk]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Mark Kennedy [mkennedy]",
+        "Steffen [Steffen]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/61252.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/clip6.dat",
+        "p/1-4ndis.dat",
+        "p/1-16ndis.dat",
+        "p/1-4chrd.dat",
+        "p/3-16chrd.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-16ndis.dat",
+        "p/5-8cyli.dat",
+        "p/5-8edge.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/rect2p.dat",
+        "p/box2-5.dat",
+        "p/box3u2p.dat",
+        "p/box5.dat",
+        "p/rect3.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "60470b",
+      "description": "Plate  1 x  2 with  2 Clips Horizontal (Thick C-Clips)",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/60470b.dat",
+      "authors": [
+        "Max Martin Richter [MMR1988]",
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman",
+        "Niels Karsdorp [nielsk]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Mark Kennedy [mkennedy]",
+        "Steffen [Steffen]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/60470b.dat",
+        "p/stug-2x1.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "p/stud3.dat",
+        "p/clip6.dat",
+        "p/1-4ndis.dat",
+        "p/1-16ndis.dat",
+        "p/1-4chrd.dat",
+        "p/3-16chrd.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-16ndis.dat",
+        "p/5-8cyli.dat",
+        "p/5-8edge.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/rect2p.dat",
+        "p/box2-5.dat",
+        "p/box3u2p.dat",
+        "p/box5.dat",
+        "p/rect3.dat",
+        "p/rect.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "48336",
+      "description": "Plate  1 x  2 with Handle Type 2",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/48336.dat",
+      "authors": [
+        "Guy Vivan [guyvivan]",
+        "James Jessiman",
+        "Magnus Forsberg [MagFors]",
+        "Mark Kennedy [mkennedy]",
+        "Niels Karsdorp [nielsk]",
+        "Gerald Lasser [GeraldLasser]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Max Martin Richter [MMR1988]",
+        "Philippe Hurbain [Philo]",
+        "Chris Dee [cwdee]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt",
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/48336.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box5.dat",
+        "p/stug-2x1.dat",
+        "p/stud.dat",
+        "p/4-4cylo.dat",
+        "p/box3u4a.dat",
+        "p/rect.dat",
+        "p/phandle1.dat",
+        "p/rect3.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat",
+        "p/2-4chrd.dat",
+        "p/3-16chrd.dat",
+        "p/1-4ndis.dat",
+        "p/1-16tang.dat",
+        "p/2-4ring2.dat",
+        "p/3-16ring2.dat",
+        "p/rect2p.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "11458",
+      "description": "Plate  1 x  2 with Offset Peghole",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/11458.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Willy Tschager [Holly-Wood]",
+        "Mark Kennedy [mkennedy]",
+        "Michael Heidemann [mikeheide]",
+        "Max Martin Richter [MMR1988]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/11458.dat",
+        "p/stud3.dat",
+        "p/4-4edge.dat",
+        "p/4-4disc.dat",
+        "p/4-4cyli.dat",
+        "p/box5.dat",
+        "p/recte4.dat",
+        "p/2-4ndis.dat",
+        "p/box2-7.dat",
+        "p/stud.dat",
+        "p/rect3.dat",
+        "p/connhole.dat",
+        "p/peghole.dat",
+        "p/4-4ring3.dat",
+        "p/4-4ring8.dat",
+        "p/2-4ring18.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "43722a",
+      "description": "Wing  2 x  3 Right without Chamfer",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/43722a.dat",
+      "authors": [
+        "Donald Sutter [technog]",
+        "Steffen [Steffen]",
+        "Mark Kennedy [mkennedy]",
+        "Max Martin Richter [MMR1988]",
+        "James Jessiman",
+        "J.C. Tchang [tchang]",
+        "Willy Tschager [Holly-Wood]",
+        "Niels Karsdorp [nielsk]",
+        "Alex Taylor [anathema]",
+        "Massimo Maso [Sirio]",
+        "Philippe Hurbain [Philo]",
+        "Chris Dee [cwdee]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/43722a.dat",
+        "parts/s/43722as01.dat",
+        "p/box2-5.dat",
+        "p/rect2p.dat",
+        "p/rect3.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/3-8cylo.dat",
+        "p/3-8edge.dat",
+        "p/3-8cyli.dat",
+        "p/1-4ring3.dat",
+        "p/3-8ring3.dat",
+        "p/4-4cylo.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/7-16ring3.dat",
+        "p/2-4ring3.dat",
+        "p/1-16tndis.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-4cylo.dat",
+        "p/3-4edge.dat",
+        "p/3-4cyli.dat",
+        "p/rect.dat",
+        "p/box2-7.dat",
+        "p/rect1.dat",
+        "p/stug-1x3.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "43723a",
+      "description": "Wing  2 x  3 Left without Chamfer",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/43723a.dat",
+      "authors": [
+        "Donald Sutter [technog]",
+        "Steffen [Steffen]",
+        "Mark Kennedy [mkennedy]",
+        "Max Martin Richter [MMR1988]",
+        "James Jessiman",
+        "J.C. Tchang [tchang]",
+        "Willy Tschager [Holly-Wood]",
+        "Niels Karsdorp [nielsk]",
+        "Alex Taylor [anathema]",
+        "Massimo Maso [Sirio]",
+        "Philippe Hurbain [Philo]",
+        "Chris Dee [cwdee]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/43723a.dat",
+        "parts/s/43722as01.dat",
+        "p/box2-5.dat",
+        "p/rect2p.dat",
+        "p/rect3.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/3-8cylo.dat",
+        "p/3-8edge.dat",
+        "p/3-8cyli.dat",
+        "p/1-4ring3.dat",
+        "p/3-8ring3.dat",
+        "p/4-4cylo.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/7-16ring3.dat",
+        "p/2-4ring3.dat",
+        "p/1-16tndis.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-4cylo.dat",
+        "p/3-4edge.dat",
+        "p/3-4cyli.dat",
+        "p/rect.dat",
+        "p/box2-7.dat",
+        "p/rect1.dat",
+        "p/stug-1x3.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "30355",
+      "description": "Wing  6 x 12 Left",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/30355.dat",
+      "authors": [
+        "John Van Zwieten [jvan]",
+        "Guy Vivan [guyvivan]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Mark Kennedy [mkennedy]",
+        "[PTadmin]",
+        "Steve Bliss [sbliss]",
+        "Tore Eriksson [Tore_Eriksson]",
+        "Michael Heidemann [mikeheide]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt",
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/30355.dat",
+        "parts/s/30355s01.dat",
+        "p/rect.dat",
+        "p/box2-5.dat",
+        "p/rect3.dat",
+        "p/stud4.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/stug3.dat",
+        "p/stug-3x3.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat",
+        "p/stug4.dat",
+        "p/stug-4x4.dat",
+        "p/stug-2x2.dat",
+        "p/stug5.dat",
+        "p/stug-5x5.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "30356",
+      "description": "Wing  6 x 12 Right",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/30356.dat",
+      "authors": [
+        "John Van Zwieten [jvan]",
+        "Guy Vivan [guyvivan]",
+        "James Jessiman",
+        "Steffen [Steffen]",
+        "Mark Kennedy [mkennedy]",
+        "[PTadmin]",
+        "Steve Bliss [sbliss]",
+        "Tore Eriksson [Tore_Eriksson]",
+        "Michael Heidemann [mikeheide]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt",
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/30356.dat",
+        "parts/s/30355s01.dat",
+        "p/rect.dat",
+        "p/box2-5.dat",
+        "p/rect3.dat",
+        "p/stud4.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/stug3.dat",
+        "p/stug-3x3.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat",
+        "p/stug4.dat",
+        "p/stug-4x4.dat",
+        "p/stug-2x2.dat",
+        "p/stug5.dat",
+        "p/stug-5x5.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "41769a",
+      "description": "Wing  2 x  4 Right without Chamfer",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/41769a.dat",
+      "authors": [
+        "Takeshi Takahashi [RainbowDolphin]",
+        "James Jessiman",
+        "Philippe Hurbain [Philo]",
+        "Steffen [Steffen]",
+        "Max Martin Richter [MMR1988]",
+        "Marc Klein [marckl]",
+        "Tim Gould [timgould]",
+        "Orion Pobursky [OrionP]",
+        "Massimo Maso [Sirio]",
+        "Willy Tschager [Holly-Wood]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Mark Kennedy [mkennedy]",
+        "Paul Easter [pneaster]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/41769a.dat",
+        "parts/s/41770as01.dat",
+        "p/stud4.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/1-16chrd.dat",
+        "p/empty.dat",
+        "p/1-16cylo.dat",
+        "p/1-16cyli.dat",
+        "p/1-16edge.dat",
+        "p/1-8cylo.dat",
+        "p/1-8edge.dat",
+        "p/1-8cyli.dat",
+        "p/1-8chrd.dat",
+        "p/1-4stud4.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/1-4ring3.dat",
+        "p/3-16stud4.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-16ring3.dat",
+        "p/1-16tndis.dat",
+        "p/1-8tndis.dat",
+        "p/2-4stud4.dat",
+        "p/2-4ring3.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat",
+        "p/1-8stud4.dat",
+        "p/1-8ring3.dat",
+        "p/rect3.dat",
+        "p/rect.dat",
+        "p/stug-1x4.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "41770a",
+      "description": "Wing  2 x  4 Left without Chamfer",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/41770a.dat",
+      "authors": [
+        "Takeshi Takahashi [RainbowDolphin]",
+        "James Jessiman",
+        "Philippe Hurbain [Philo]",
+        "Steffen [Steffen]",
+        "Max Martin Richter [MMR1988]",
+        "Marc Klein [marckl]",
+        "Tim Gould [timgould]",
+        "Orion Pobursky [OrionP]",
+        "Massimo Maso [Sirio]",
+        "Willy Tschager [Holly-Wood]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Mark Kennedy [mkennedy]",
+        "Paul Easter [pneaster]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/41770a.dat",
+        "parts/s/41770as01.dat",
+        "p/stud4.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4ring3.dat",
+        "p/1-16chrd.dat",
+        "p/empty.dat",
+        "p/1-16cylo.dat",
+        "p/1-16cyli.dat",
+        "p/1-16edge.dat",
+        "p/1-8cylo.dat",
+        "p/1-8edge.dat",
+        "p/1-8cyli.dat",
+        "p/1-8chrd.dat",
+        "p/1-4stud4.dat",
+        "p/1-4cylo.dat",
+        "p/1-4edge.dat",
+        "p/1-4cyli.dat",
+        "p/1-4ring3.dat",
+        "p/3-16stud4.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-16ring3.dat",
+        "p/1-16tndis.dat",
+        "p/1-8tndis.dat",
+        "p/2-4stud4.dat",
+        "p/2-4ring3.dat",
+        "p/2-4cylo.dat",
+        "p/2-4edge.dat",
+        "p/2-4cyli.dat",
+        "p/1-8stud4.dat",
+        "p/1-8ring3.dat",
+        "p/rect3.dat",
+        "p/rect.dat",
+        "p/stug-1x4.dat",
+        "p/stud.dat",
+        "p/4-4disc.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "24299",
+      "description": "Wing  2 x  2 Left",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/24299.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Steffen [Steffen]",
+        "James Jessiman",
+        "Willy Tschager [Holly-Wood]",
+        "Niels Karsdorp [nielsk]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Mark Kennedy [mkennedy]",
+        "Massimo Maso [Sirio]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/24299.dat",
+        "p/stug-1x2.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "parts/s/24299s01.dat",
+        "p/box2-5.dat",
+        "p/box2-7.dat",
+        "p/stud3.dat",
+        "p/box5.dat",
+        "parts/s/51739s01.dat",
+        "p/rect.dat",
+        "p/3-16chrd.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-16tndis.dat",
+        "p/rect3.dat"
+      ],
+      "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
+    },
+    {
+      "id": "24307",
+      "description": "Wing  2 x  2 Right",
+      "sourceUrl": "https://library.ldraw.org/library/official/parts/24307.dat",
+      "authors": [
+        "Magnus Forsberg [MagFors]",
+        "Steffen [Steffen]",
+        "James Jessiman",
+        "Willy Tschager [Holly-Wood]",
+        "Niels Karsdorp [nielsk]",
+        "J.C. Tchang [tchang]",
+        "Donald Sutter [technog]",
+        "Mark Kennedy [mkennedy]",
+        "Massimo Maso [Sirio]"
+      ],
+      "licenses": [
+        "Licensed under CC BY 4.0 : see CAreadme.txt"
+      ],
+      "files": [
+        "parts/24307.dat",
+        "p/stug-1x2.dat",
+        "p/stud.dat",
+        "p/4-4edge.dat",
+        "p/4-4cyli.dat",
+        "p/4-4disc.dat",
+        "parts/s/24299s01.dat",
+        "p/box2-5.dat",
+        "p/box2-7.dat",
+        "p/stud3.dat",
+        "p/box5.dat",
+        "parts/s/51739s01.dat",
+        "p/rect.dat",
+        "p/3-16chrd.dat",
+        "p/3-16cylo.dat",
+        "p/3-16edge.dat",
+        "p/3-16cyli.dat",
+        "p/3-16tndis.dat",
+        "p/rect3.dat"
       ],
       "modifications": "Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted."
     },

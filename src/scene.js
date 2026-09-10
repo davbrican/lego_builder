@@ -35,8 +35,8 @@ export class BuilderScene {
     this.pointerActive=false;this.pressed=null;this.touchIds=new Set();
     const el=this.renderer.domElement;
     el.addEventListener('pointermove',e=>{this.pointerActive=true;this.lastEvent={clientX:e.clientX,clientY:e.clientY};if(this.pressed&&Math.hypot(e.clientX-this.pressed.x,e.clientY-this.pressed.y)>5)this.pressed.dragged=true;this.inspectPointer();});
-    el.addEventListener('pointerdown',e=>{this.touchIds.add(e.pointerId);if(this.touchIds.size>1 && this.pressed)this.pressed.dragged=true;if(e.button===0&&this.touchIds.size===1)this.pressed={x:e.clientX,y:e.clientY,dragged:false,id:e.pointerId};});
-    el.addEventListener('pointerup',e=>{const click=this.pressed?.id===e.pointerId&&!this.pressed.dragged&&e.button===0;this.touchIds.delete(e.pointerId);this.pressed=null;if(click){this.lastEvent={clientX:e.clientX,clientY:e.clientY};this.pointerActive=true;const hit=this.inspectPointer();this.onClick(hit);}});
+    el.addEventListener('pointerdown',e=>{if(this.suppressPointer)return;this.touchIds.add(e.pointerId);if(this.touchIds.size>1 && this.pressed)this.pressed.dragged=true;if(e.button===0&&this.touchIds.size===1)this.pressed={x:e.clientX,y:e.clientY,dragged:false,id:e.pointerId};});
+    el.addEventListener('pointerup',e=>{const click=!this.suppressPointer&&this.pressed?.id===e.pointerId&&!this.pressed.dragged&&e.button===0;this.touchIds.delete(e.pointerId);this.pressed=null;if(click){this.lastEvent={clientX:e.clientX,clientY:e.clientY};this.pointerActive=true;const hit=this.inspectPointer();this.onClick(hit);}});
     el.addEventListener('pointercancel',e=>{this.touchIds.delete(e.pointerId);this.pressed=null;});
     el.addEventListener('pointerleave',()=>{if(!this.pressed){this.pointerActive=false;this.onHover(null);}});
     el.addEventListener('contextmenu',e=>e.preventDefault());

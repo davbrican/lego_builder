@@ -10,8 +10,8 @@ import {pngWithAttribution,modelAttribution} from '../src/attribution.js';
 setGeometryReader(async part=>JSON.parse(await readFile(new URL(`../public${part.geometry}`,import.meta.url),'utf8')));
 const p=(part,overrides={})=>({id:part,part,color:'#c73536',x:0,y:0,z:0,rotation:0,...overrides});
 
-test('all 145 references have verified local geometry, normals, profiles and attribution',async()=>{
-  assert.equal(PARTS.length,145);assert.equal(new Set(PARTS.map(p=>p.id)).size,145);assert.equal(CATEGORIES.length,11);
+test('all 181 references have verified local geometry, normals, profiles and attribution',async()=>{
+  assert.equal(PARTS.length,181);assert.equal(new Set(PARTS.map(p=>p.id)).size,181);assert.equal(CATEGORIES.length,15);
   const attribution=JSON.parse(await readFile(new URL('../public/ldraw/attribution.json',import.meta.url),'utf8'));
   assert.equal(attribution.parts.length,PARTS.length);
   for(const part of PARTS){
@@ -23,7 +23,8 @@ test('all 145 references have verified local geometry, normals, profiles and att
     assert.ok(data.normal.every(n=>Number.isInteger(n)&&Math.abs(n)<=32767));
     assert.ok(part.columns.length>0&&part.columns.every(c=>c[0]>=0&&c[0]<part.w*4&&c[1]>=0&&c[1]<part.d*4&&c[2]<c[3]));
     assert.ok(part.authors.length&&part.licenses.length,part.id);
-    assert.equal(placementError(p(part.id),[],64),null,part.id);
+    const onBase=candidateFromHit(p(part.id),{point:{x:16,z:16}});
+    assert.equal(placementError(onBase,[],64),null,part.id);
     await ensureGeometry(part.id);
     for(const rotation of [0,90,180,270]){
       const piece=p(part.id,{rotation}),group=brickGroup(piece),box=new Box3().setFromObject(group),size=dimensions(piece);

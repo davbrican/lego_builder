@@ -1405,7 +1405,21 @@ td:last-child,th:last-child {
   max-height: calc(100% - 280px);
   overflow-y: auto;
 }
+.assembly-card { width: 290px; }
+.assembly-card p, .assembly-card button, .assembly-card label, .assembly-card input { font-size: 14px; }
+.assembly-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.assembly-tools button { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 6px; border: 1px solid #d8e0e3; border-radius: 6px; }
+.assembly-tools button:last-child { grid-column: 1 / -1; }
+.assembly-tools button[aria-pressed="true"] { background: #d9e8ee; border-color: #6b8da0; }
+.assembly-tools svg, .assembly-finish svg { width: 17px; height: 17px; flex-shrink: 0; }
+.assembly-card .assembly-feedback { color: #386143; }
+.assembly-card .assembly-feedback.invalid { color: #a63d3d; }
+.assembly-finish { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.assembly-finish button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; }
+.assembly-finish button:disabled { opacity: .45; cursor: not-allowed; }
 @media (max-width: 760px) {
+  .assembly-card { width: min(260px, calc(100% - 28px)); top: 142px; max-height: calc(100% - 255px); }
+  .assembly-card p { display: block; }
   .category-filter { margin: 12px 18px; }
   .part-detail-preview { padding: 8px; gap: 10px; }
   .part-detail-preview img { width: 115px; }

@@ -42,9 +42,17 @@ function connections(pieces){
   }
   const connected=new Set(pieces.filter(p=>p.y===0).map(p=>p.id)),queue=[...connected];
   for(let i=0;i<queue.length;i++)for(const id of linked.get(queue[i]))if(!connected.has(id)){connected.add(id);queue.push(id);}
-  const result={connected,top,bottom};connectionCache.set(pieces,result);return result;
+  const result={connected,top,bottom,linked};connectionCache.set(pieces,result);return result;
 }
 export function connectedIds(pieces){return connections(pieces).connected;}
+// The base supports pieces, but never joins two separate assemblies.
+export function assemblyIds(pieces,seedId){
+  const {linked}=connections(pieces),ids=new Set();
+  if(!linked.has(seedId))return ids;
+  const queue=[seedId];ids.add(seedId);
+  for(let i=0;i<queue.length;i++)for(const id of linked.get(queue[i]))if(!ids.has(id)){ids.add(id);queue.push(id);}
+  return ids;
+}
 export function placementError(candidate,pieces,size,{allowFloating=false,ignoreId=null}={}){
   const d=dimensions(candidate);
   if(![candidate.x,candidate.y,candidate.z].every(n=>Number.isFinite(n)&&Number.isInteger(n*2)))return 'La posición debe coincidir con la cuadrícula de medio tetón o media placa.';
@@ -69,13 +77,17 @@ export function candidateFromHit(template,hit){
   const part=PART_MAP[template.part],d=dimensions(template);
   const result={...template,x:Math.floor(hit.point.x)-Math.floor(d.w/2),z:Math.floor(hit.point.z)-Math.floor(d.d/2),y:hit.layer??0};
   if(hit.layer!==undefined){result.x=Math.round((hit.point.x-d.w/2)*2)/2;result.z=Math.round((hit.point.z-d.d/2)*2)/2;return result;}
-  if(!hit.piece)return result;
+  if(!hit.piece){
+    const socket=contactPoints({...template,x:0,y:0,z:0},'bottom')[0];
+    if(socket){result.x+=.5-((socket[0]%1)+1)%1;result.z+=.5-((socket[2]%1)+1)%1;}
+    return result;
+  }
   const studs=contactPoints(hit.piece,'top');
   const receivers=part.bottom.map(p=>rotatePoint(p,part,template.rotation));
   if(studs.length&&receivers.length){
     const nearest=studs.reduce((a,b)=>Math.hypot(a[0]-hit.point.x,a[2]-hit.point.z)<=Math.hypot(b[0]-hit.point.x,b[2]-hit.point.z)?a:b);
     const anchor=receivers.reduce((a,b)=>Math.hypot(a[0]-d.w/2,a[2]-d.d/2)<=Math.hypot(b[0]-d.w/2,b[2]-d.d/2)?a:b);
-    return {...result,x:nearest[0]-anchor[0],y:nearest[1],z:nearest[2]-anchor[2]};
+    return {...result,x:nearest[0]-anchor[0],y:nearest[1]-anchor[1],z:nearest[2]-anchor[2]};
   }
   result.y=hit.piece.y+dimensions(hit.piece).h;return result;
 }

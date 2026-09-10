@@ -31,10 +31,11 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 
 ## Qué puedes hacer
 
-- Construir con **145 piezas LDraw** en 10 categorías, con 16 colores de libre elección.
+- Construir con **181 piezas LDraw** en 14 categorías, con 16 colores de libre elección.
 - Orbitar, acercar, desplazar y cambiar a vistas superior, frontal e isométrica.
 - Previsualizar el encaje en tetones reales, girar 90°, apilar y detectar solapamientos con perfiles de forma.
 - Seleccionar, mover, duplicar, pintar o borrar piezas y editar sus coordenadas.
+- Seleccionar conjuntos conectados con **G**, moverlos con ejes X/Y/Z y girarlos 90° alrededor de Y, previsualizar el encaje y confirmar o cancelar la operación completa.
 - Deshacer y rehacer hasta 80 cambios, incluyendo cambios de proyecto y de base.
 - Cambiar la base entre 16, 32, 48 y 64 tetones por lado.
 - Construir a altura automática o fijar una capa; permitir piezas flotantes para bocetar.
@@ -52,6 +53,7 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 | Desplazar cámara | Arrastrar con el botón derecho |
 | Construir / seleccionar | B / V |
 | Mover / pintar / borrar | M / P / X |
+| Conjunto conectado | G |
 | Girar 90° | R |
 | Duplicar selección | Ctrl/Cmd + D |
 | Eliminar selección | Supr o Retroceso |
@@ -62,6 +64,18 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 | Cancelar movimiento o selección | Esc |
 
 En una pantalla táctil: toca para colocar, arrastra un dedo para orbitar y usa dos dedos para acercar o desplazar. El botón de menú abre el catálogo. Al mover una pieza, el primer clic la recoge y el siguiente confirma; Esc cancela sin modificarla.
+
+## Construir por conjuntos y unirlos
+
+1. Construye dos módulos en zonas distintas de la base.
+2. Activa **Conjunto conectado (G)** y pulsa cualquier pieza de un módulo. Se recorre la red de tetones y huecos en ambas direcciones, incluyendo puentes y piezas colgantes. Compartir la base o tocarse por una cara no une dos módulos.
+3. Arrastra los ejes **X/Y/Z**, cambia a **Girar Y** para usar el aro de giro en pasos de 90°, o usa **Colocar con puntero** y pulsa sobre el destino. También puedes introducir coordenadas del extremo mínimo del conjunto y previsualizarlas. X/Z se miden en tetones; Y, en placas.
+4. A menos de 0,7 tetones de distancia espacial entre conectores, se busca un encaje cercano válido. La previsualización se ajusta sin alterar el proyecto. Al soltar un eje cerca de un encaje, o pulsar con el puntero, aparece **¿Unir los conjuntos aquí?**. El botón Confirmar también permite revisar la colocación.
+5. Acepta **Sí, colocar aquí** para aplicar todo el movimiento de una vez. **Seguir ajustando** conserva la previsualización; **Cancelar / Esc** restaura las posiciones originales. **Deshacer** revierte el conjunto completo.
+
+El conjunto no se guarda como un objeto permanente: al volver a seleccionarlo, se recalculan sus conexiones. Después de unir dos módulos, G selecciona ambos. Los cambios provisionales no llegan al historial ni al autoguardado. Las herramientas individuales mantienen su funcionamiento. Cambiar de herramienta descarta la previsualización pendiente.
+
+Por ahora los giros son alrededor del eje vertical **Y**: no hay inclinaciones X/Z ni escalado. La conexión automática usa tetones y receptores verticales; aún no reconoce uniones laterales, clips, ejes ni bisagras. Estas limitaciones se muestran también en la ayuda y las fichas.
 
 ## Guardado y portabilidad
 
@@ -79,7 +93,7 @@ Se usa una selección revisada de la **biblioteca comunitaria LDraw, edición 20
 | --- | ---: |
 | Ladrillos | 24 |
 | Placas | 28 |
-| Baldosas | 13 |
+| Baldosas | 16 |
 | Pendientes | 22 |
 | Curvas | 10 |
 | Redondas | 18 |
@@ -87,8 +101,14 @@ Se usa una selección revisada de la **biblioteca comunitaria LDraw, edición 20
 | Ventanas y vallas | 8 |
 | Technic | 8 |
 | Ruedas | 7 |
+| Tetones laterales | 11 |
+| Soportes angulares | 4 |
+| Placas especiales | 10 |
+| Alas | 8 |
 
-Las geometrías se descargan desde tu propio contenedor cuando son necesarias. Las miniaturas usan una cola y un único renderizador; no se abren 145 contextos WebGL ni se cargan todas las piezas antes de entrar al taller. Los archivos se almacenan en caché con su hash de contenido.
+Las geometrías se descargan desde tu propio contenedor cuando son necesarias. Las miniaturas usan una cola y un único renderizador; no se abren 181 contextos WebGL ni se cargan todas las piezas antes de entrar al taller. Los archivos se almacenan en caché con su hash de contenido.
+
+La familia **Tetones laterales** incluye las referencias **99206** y **4304** (placa 2 × 2 con dos tetones laterales y dos elevados). La captura de unas instrucciones no permite distinguir con certeza esas dos variantes de molde. Las piezas laterales incluyen el volumen de sus tetones salientes en las colisiones; el espacio ocupado puede ser mayor que sus dimensiones nominales.
 
 En la ficha puedes abrir el [archivo original de LDraw](https://library.ldraw.org/) o buscar la referencia en [LEGO Pick a Brick](https://www.lego.com/es-es/pick-and-build/pick-a-brick). La selección de colores es creativa: **no certifica que esa combinación de pieza/color exista o esté a la venta**. Algunas referencias son variantes históricas de molde. El catálogo no consulta precios ni existencias.
 
@@ -98,7 +118,7 @@ Las coordenadas X/Z se expresan en tetones; Y en placas. Se admiten medios teton
 
 El encaje al apuntar a una pieza busca el tetón superior más cercano y alinea un hueco receptor de la pieza nueva. Esto permite colocar un ladrillo de 1 × 1 sobre el tetón central de un cono de 2 × 2, desplazándolo medio tetón. Las pendientes solo transmiten conexión por sus tetones; las superficies lisas no inventan conexiones. Las uniones se vuelven a calcular al borrar o mover apoyos.
 
-Las colisiones usan perfiles de columnas de **1/4 de tetón (2 mm)**, obtenidos de la geometría del cuerpo sin los tetones estándar. Se conserva el espacio libre bajo los arcos y en las esquinas. Es una aproximación conservadora al volumen exterior: puede rechazar encajes ajustados, huecos laterales o montajes especiales. Los huecos receptores se infieren de la base de cada pieza y se revisan explícitamente para arcos y piezas con tetones integrados; no son un catálogo oficial de conexiones mecánicas.
+Las colisiones usan perfiles de columnas de **1/4 de tetón (2 mm)**, obtenidos de la geometría del cuerpo sin los tetones verticales estándar (los laterales sí cuentan como volumen). Se conserva el espacio libre bajo los arcos y en las esquinas. Es una aproximación conservadora al volumen exterior: puede rechazar encajes ajustados, huecos laterales o montajes especiales. Los huecos receptores se infieren de la base de cada pieza y se revisan explícitamente para arcos y piezas con tetones integrados; no son un catálogo oficial de conexiones mecánicas.
 
 **Ruedas, neumáticos y llantas** son piezas individuales: se pueden colocar sobre la base o en modo libre. Todavía no se simulan encajes de ejes y pasadores, giro de ruedas, bisagras, conexiones laterales Technic ni estabilidad o resistencia. Tampoco se comprueba la secuencia física de montaje. Las piezas sin conexión se señalan y no caen por gravedad. El límite de protección es de 2.000 piezas; el rendimiento depende de la GPU y de la geometría elegida.
 
@@ -109,7 +129,7 @@ Esta versión usa proyectos y almacenamiento local **v2**. El prototipo v1 se de
 - [Biblioteca LDraw](https://library.ldraw.org/) y [descarga oficial de la biblioteca LDraw](https://library.ldraw.org/updates?latest=).
 - `public/ldraw/attribution.json`: autores, fuentes y licencias por pieza y dependencias.
 - `public/ldraw/CAreadme.txt`, `CAlicense.txt`, `CAlicense4.txt`: condiciones originales CC BY 2.0 y/o CC BY 4.0.
-- `scripts/ldraw-sources.json`: copia local de las 499 definiciones necesarias, con sus cabeceras originales. Solo se han normalizado las rutas de subarchivos.
+- `scripts/ldraw-sources.json`: copia local de las 576 definiciones necesarias, con sus cabeceras originales. Solo se han normalizado las rutas de subarchivos.
 - `scripts/build-ldraw.mjs`: triangula con Three.js, convierte ejes y unidades, indexa la geometría y genera perfiles y metadatos. Las aristas gráficas LDraw se omiten y los colores se sustituyen por el elegido en el editor.
 
 Las geometrías ya vienen generadas: **Docker no necesita acceder a LDraw**. Para regenerarlas a partir de las fuentes incluidas:
@@ -150,14 +170,16 @@ npm run build
 npm run preview
 ```
 
-`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 19 pruebas cubren las 145 geometrías, conexiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
+`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 27 pruebas cubren las 181 geometrías y los movimientos de conjuntos, además de conexiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
 
 ## Estructura
 
 | Archivo | Responsabilidad |
 | --- | --- |
+| `src/assemblies.js` | Selección conectada, transformaciones rígidas, encaje y borradores sin mutación |
+| `src/assembly-controls.js` | Ejes de desplazamiento, aro Y y previsualización del conjunto |
 | `src/catalog.js` | Catálogo LDraw, búsqueda, colores y transformación de conectores |
-| `src/generated/parts.json` | 145 referencias con dimensiones, perfiles y atribución |
+| `src/generated/parts.json` | 181 referencias con dimensiones, perfiles y atribución |
 | `src/geometry.js` | Carga local de geometrías con caché |
 | `src/placement.js` | Colisiones por forma y grafo de conexiones |
 | `src/model.js` | Validación, historial e inventario |

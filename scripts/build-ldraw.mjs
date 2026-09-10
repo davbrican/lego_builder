@@ -36,10 +36,28 @@ function studPoints(root){
   }
   visit(root,new THREE.Matrix4());return points;
 }
-async function parse(root,files,bodyOnly=false){
-  const text=files.map(file=>`0 FILE ${file}\n`+bundle.files[file].split('\n').filter(line=>{
+async function parse(root,files,bodyOnly=false,sideStuds=false){
+  let text=files.map(file=>`0 FILE ${file}\n`+bundle.files[file].split('\n').filter(line=>{
     const t=line.split(/\s+/);return !bodyOnly || t[0]!=='1' || !isStud(t[14]);
   }).join('\n')).join('\n');
+  if(bodyOnly&&sideStuds){
+    // Keep lateral studs as solid collision material. Only upward studs enter
+    // receivers; removing all stud primitives would hide side protrusions.
+    const sections=[];let serial=0;
+    function visit(file,matrix){
+      const name=`body-${serial++}.dat`,index=sections.length;sections.push('');
+      const lines=[];
+      for(const line of bundle.files[file].split('\n')){
+        const t=line.trim().split(/\s+/);
+        if(t[0]!=='1'){lines.push(line);continue;}
+        const next=matrix.clone().multiply(localMatrix(t));
+        if(isStud(t[14])&&new THREE.Vector3(0,-1,0).transformDirection(next).y<-.999)continue;
+        lines.push(t.slice(0,14).join(' ')+' '+visit(t[14],next));
+      }
+      sections[index]=`0 FILE ${name}\n${lines.join('\n')}`;return name;
+    }
+    visit(root,new THREE.Matrix4());text=sections.join('\n');
+  }
   const loader=new LDrawLoader().setConditionalLineMaterial(LDrawConditionalLineMaterial);
   loader.addDefaultMaterials();
   const group=await new Promise((resolve,reject)=>loader.parse(text,resolve,reject));
@@ -107,12 +125,46 @@ function nameFor(description){
     .replace(/ Triple/,' triple').replace(/ Convex/,' convexa').replace(/ Concave/,' cóncava')
     .replace(/ Grille/,' con rejilla').replace(/ Frame/,' · marco').replace(/ Log/,' · troncos');
 }
+const reviewedNames={
+  '99206':'Placa 2 × 2 · 2 tetones laterales y 2 elevados',
+  '4304':'Placa 2 × 2 · tetones laterales, variante 4304',
+  '87087':'Ladrillo 1 × 1 · 1 tetón lateral SNOT',
+  '11211':'Ladrillo 1 × 2 · 2 tetones laterales SNOT',
+  '22885':'Ladrillo 1 × 2 × 1⅔ · tetones laterales',
+  '4070':'Ladrillo 1 × 1 · faro con tetón lateral',
+  '52107':'Ladrillo 1 × 2 · tetones a ambos lados',
+  '4733':'Ladrillo 1 × 1 · tetones en 4 caras',
+  '47905':'Ladrillo 1 × 1 · tetones en caras opuestas',
+  '26604':'Ladrillo 1 × 1 · tetones en caras contiguas',
+  '2434':'Ladrillo 2 × 4 × 2 · tetones laterales',
+  '36840':'Soporte angular 1 × 1 – 1 × 1 hacia arriba',
+  '36841':'Soporte angular 1 × 1 – 1 × 1 hacia abajo',
+  '99780':'Soporte angular 1 × 2 – 1 × 2 hacia arriba',
+  '99781':'Soporte angular 1 × 2 – 1 × 2 hacia abajo',
+  '15573':'Placa 1 × 2 · tetón central, sin tubo inferior',
+  '3794b':'Placa 1 × 2 · tetón central jumper',
+  '87580':'Placa 2 × 2 · tetón central jumper',
+  '18649':'Placa 1 × 2 · asas en ambos extremos',
+  '34103':'Placa 1 × 3 · 2 tetones desplazados',
+  '35480':'Placa 1 × 2 · extremos redondos y tetones huecos',
+  '61252':'Placa 1 × 1 · clip horizontal grueso',
+  '60470b':'Placa 1 × 2 · 2 clips horizontales',
+  '48336':'Placa 1 × 2 · asa lateral',
+  '11458':'Placa 1 × 2 · orificio Technic elevado',
+  '11203':'Baldosa 2 × 2 invertida · cara inferior lisa',
+  '24246':'Baldosa 1 × 1 · extremo redondeado',
+  '15712':'Baldosa 1 × 1 · clip grueso',
+  '43722a':'Ala 2 × 3 izquierda','43723a':'Ala 2 × 3 derecha',
+  '30355':'Ala 6 × 12 izquierda','30356':'Ala 6 × 12 derecha',
+  '41769a':'Ala 2 × 4 izquierda','41770a':'Ala 2 × 4 derecha',
+  '24299':'Ala 2 × 2 izquierda','24307':'Ala 2 × 2 derecha',
+};
 
 const catalog=[],attributions=[];
 for(const spec of bundle.parts){
   const root=`parts/${spec.id}.dat`,files=closure(root);
   const geometry=await parse(root,files);
-  const body=await parse(root,files,true);
+  const body=await parse(root,files,true,spec.category==='Tetones laterales'||spec.category==='Soportes angulares');
   const flip=new THREE.Matrix4().makeRotationX(Math.PI).scale(new THREE.Vector3(.05,.05,.05));
   geometry.applyMatrix4(flip);body.applyMatrix4(flip);body.computeBoundingBox();
   const box=body.boundingBox;
@@ -143,6 +195,12 @@ for(const spec of bundle.parts){
   // Explicit connection review: the two end feet are the only receivers on
   // these bridge arches. Curved edges touching a cell do not make a socket.
   if(['3659','3307','16577','6182','92950'].includes(spec.id))bottom=[[.5,0,.5],[w-.5,0,.5]];
+  // Reviewed new moulds: do not infer sockets under side studs, handles,
+  // smooth undersides or the empty side of a wing. Brackets/clips can have
+  // receivers above their lowest protrusion, so retain the receiver height.
+  if(spec.category==='Tetones laterales'||spec.category==='Alas')bottom=top.map(([x,,z])=>[x,0,z]);
+  if(spec.category==='Soportes angulares'||['18649','61252','60470b','48336'].includes(spec.id))bottom=top.map(([x,y,z])=>[x,round(y-1),z]);
+  if(spec.id==='11203')bottom=[];
   const indexed=mergeVertices(geometry,1e-5);
   const payload={version:1,position:Array.from(indexed.attributes.position.array,n=>round(n)),
     normal:Array.from(indexed.attributes.normal.array,n=>Math.round(Math.max(-1,Math.min(1,n))*32767)),
@@ -152,7 +210,7 @@ for(const spec of bundle.parts){
   const authors=[...new Set(files.flatMap(file=>bundle.files[file].split('\n').filter(l=>l.startsWith('0 Author:')).map(l=>l.slice(10).trim())))];
   const licenses=[...new Set(files.flatMap(file=>bundle.files[file].split('\n').filter(l=>l.startsWith('0 !LICENSE')).map(l=>l.slice(11).trim())))];
   const sourceUrl=`https://library.ldraw.org/library/official/parts/${spec.id}.dat`;
-  catalog.push({...spec,name:nameFor(spec.description),w,d,h,studs:top.length>0,top,bottom,columns:profile,
+  catalog.push({...spec,name:reviewedNames[spec.id]||nameFor(spec.description),w,d,h,studs:top.length>0,top,bottom,columns:profile,
     geometry:`/ldraw/geometry/${spec.id}.json`,sourceUrl,authors,licenses,sha256:createHash('sha256').update(serialized).digest('hex')});
   attributions.push({id:spec.id,description:spec.description,sourceUrl,authors,licenses,files,
     modifications:'Triangulated with Three.js LDrawLoader; axes and units converted; vertices indexed and rounded to 0.0001 stud; surface colours replaced by the editor colour; edge lines omitted.'});
