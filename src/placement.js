@@ -1,29 +1,36 @@
 import {PART_MAP,dimensions,MAX_PIECES,contactPoints,rotatePoint} from './catalog.js';
+import {MECHANICAL_PARTS,MECHANICAL_PROFILES,mechanicalJoints,jointContainsOverlap,mechanicalCandidates} from './mechanical.js';
 
 export function overlapXZ(a,b){
   const da=dimensions(a),db=dimensions(b);
   return a.x<b.x+db.w&&a.x+da.w>b.x&&a.z<b.z+db.d&&a.z+da.d>b.z;
 }
 const shapeCache=new Map();
-function shape(piece){
-  const key=`${piece.part}/${piece.rotation}`;
+function shape(piece,resolution=4){
+  const key=`${piece.part}/${piece.rotation}/${resolution}`;
   if(shapeCache.has(key))return shapeCache.get(key);
   const part=PART_MAP[piece.part],map=new Map(),list=[];
-  for(const [x,z,low,high] of part.columns){
-    const point=rotatePoint([(x+.5)/4,0,(z+.5)/4],part,piece.rotation);
-    const rx=Math.round(point[0]*4-.5),rz=Math.round(point[2]*4-.5);
+  for(const [x,z,low,high] of resolution===20?MECHANICAL_PROFILES[piece.part].columns:part.columns){
+    const point=rotatePoint([(x+.5)/resolution,0,(z+.5)/resolution],part,piece.rotation);
+    const rx=Math.round(point[0]*resolution-.5),rz=Math.round(point[2]*resolution-.5);
     const column=[rx,rz,low,high];list.push(column);map.set(`${rx}/${rz}`,column);
   }
   const result={map,list};shapeCache.set(key,result);return result;
 }
 export function collides(a,b){
   if(!overlapXZ(a,b)||a.y>=b.y+dimensions(b).h-.002||b.y>=a.y+dimensions(a).h-.002)return false;
-  let sa=shape(a),sb=shape(b);
+  const joints=mechanicalJoints(a,b);
+  const resolution=joints.length?20:4;
+  let sa=shape(a,resolution),sb=shape(b,resolution);
   if(sa.list.length>sb.list.length){[a,b]=[b,a];[sa,sb]=[sb,sa];}
-  const dx=Math.round((a.x-b.x)*4),dz=Math.round((a.z-b.z)*4);
+  const dx=Math.round((a.x-b.x)*resolution),dz=Math.round((a.z-b.z)*resolution);
   for(const [x,z,low,high] of sa.list){
     const other=sb.map.get(`${x+dx}/${z+dz}`);
-    if(other&&a.y+low<b.y+other[3]-.002&&a.y+high>b.y+other[2]+.002)return true;
+    if(other&&a.y+low<b.y+other[3]-.002&&a.y+high>b.y+other[2]+.002){
+      const min=[Math.max(a.x+x/resolution,b.x+other[0]/resolution),Math.max(a.y+low,b.y+other[2])*.4,Math.max(a.z+z/resolution,b.z+other[1]/resolution)];
+      const max=[Math.min(a.x+(x+1)/resolution,b.x+(other[0]+1)/resolution),Math.min(a.y+high,b.y+other[3])*.4,Math.min(a.z+(z+1)/resolution,b.z+(other[1]+1)/resolution)];
+      if(!jointContainsOverlap(joints,min,max))return true;
+    }
   }
   return false;
 }
@@ -39,6 +46,11 @@ function connections(pieces){
   }
   for(const [key,above] of bottom)for(const a of above)for(const b of top.get(key)||[]){
     if(a!==b){linked.get(a).add(b);linked.get(b).add(a);}
+  }
+  const mechanical=pieces.filter(p=>MECHANICAL_PARTS[p.part]);
+  for(let i=0;i<mechanical.length;i++)for(let j=i+1;j<mechanical.length;j++){
+    const a=mechanical[i],b=mechanical[j];
+    if(mechanicalJoints(a,b).length){linked.get(a.id).add(b.id);linked.get(b.id).add(a.id);}
   }
   const connected=new Set(pieces.filter(p=>p.y===0).map(p=>p.id)),queue=[...connected];
   for(let i=0;i<queue.length;i++)for(const id of linked.get(queue[i]))if(!connected.has(id)){connected.add(id);queue.push(id);}
@@ -68,8 +80,9 @@ export function placementError(candidate,pieces,size,{allowFloating=false,ignore
   if(!allowFloating&&candidate.y>0){
     const {connected,top,bottom}=connections(others);
     const touches=contactPoints(candidate,'bottom').some(p=>(top.get(contactKey(p))||[]).some(id=>connected.has(id)))||
-      contactPoints(candidate,'top').some(p=>(bottom.get(contactKey(p))||[]).some(id=>connected.has(id)));
-    if(!touches)return PART_MAP[candidate.part].category==='Ruedas'?'Las ruedas no tienen tetones. Colócalas en la base o activa «Permitir piezas en el aire».':'Necesita alinear sus huecos con tetones reales. Puedes activar «Permitir piezas en el aire».';
+      contactPoints(candidate,'top').some(p=>(bottom.get(contactKey(p))||[]).some(id=>connected.has(id)))||
+      others.some(p=>connected.has(p.id)&&mechanicalJoints(candidate,p).length);
+    if(!touches)return PART_MAP[candidate.part].category==='Ruedas'?'Las ruedas no tienen tetones. Colócalas en la base o activa «Permitir piezas en el aire».':MECHANICAL_PARTS[candidate.part]?'Alinea tetones o un asa y un clip compatibles. R gira la pieza; Precisión permite elegir «Asas y clips».':'Necesita alinear sus huecos con tetones reales. Puedes activar «Permitir piezas en el aire».';
   }
   return null;
 }
@@ -88,11 +101,21 @@ export function grabPoint(template,anchor='center'){
   if(!receivers.length)return target;
   return receivers.reduce((a,b)=>Math.hypot(a[0]-target[0],a[2]-target[2])<=Math.hypot(b[0]-target[0],b[2]-target[2])?a:b);
 }
-export function candidateFromHit(template,hit,{anchor='center'}={}){
+export function candidateFromHit(template,hit,{anchor='center',connection='auto',pieces=null,size=64,allowFloating=false}={}){
   const part=PART_MAP[template.part],d=dimensions(template);
   const result={...template,x:Math.floor(hit.point.x)-Math.floor(d.w/2),z:Math.floor(hit.point.z)-Math.floor(d.d/2),y:hit.layer??0};
   const grip=grabPoint(template,anchor);
   if(hit.layer!==undefined){result.x=Math.round((hit.point.x-(anchor==='center'?d.w/2:grip[0]))*2)/2;result.z=Math.round((hit.point.z-(anchor==='center'?d.d/2:grip[2]))*2)/2;return result;}
+  if(hit.piece&&connection!=='studs'){
+    const options=mechanicalCandidates(template,hit.piece).map(option=>({...option,distance:Math.hypot(option.point[0]-hit.point.x,option.point[1]*.4-(hit.point.y??option.point[1]*.4),option.point[2]-hit.point.z)}));
+    const studDistance=Math.min(Infinity,...contactPoints(hit.piece,'top').map(p=>Math.hypot(p[0]-hit.point.x,p[1]*.4-(hit.point.y??p[1]*.4),p[2]-hit.point.z)));
+    const nearby=options.filter(o=>connection==='mechanical'||o.distance<=studDistance+.2);
+    // Prefer engaging both jaws of a double clip when several stations fit.
+    nearby.sort((a,b)=>b.joints-a.joints||a.distance-b.distance);
+    const valid=nearby.find(o=>!placementError(o.piece,pieces||[hit.piece],size,{allowFloating,ignoreId:template.id}));
+    if(valid)return valid.piece;
+    if(connection==='mechanical'&&nearby.length)return nearby[0].piece;
+  }
   if(!hit.piece){
     if(anchor!=='center')return {...result,x:Math.floor(hit.point.x)+.5-grip[0],z:Math.floor(hit.point.z)+.5-grip[2]};
     const socket=contactPoints({...template,x:0,y:0,z:0},'bottom')[0];

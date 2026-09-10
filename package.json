@@ -5,7 +5,8 @@
   "type": "module",
   "engines": { "node": ">=22.12.0" },
   "scripts": {
-    "catalog:build": "node scripts/build-ldraw.mjs",
+    "catalog:build": "node scripts/build-ldraw.mjs && node scripts/build-mechanical.mjs",
+    "mechanical:build": "node scripts/build-mechanical.mjs",
     "dev": "vite --host 0.0.0.0 --port 8098",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 8098",

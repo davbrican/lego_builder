@@ -1424,7 +1424,27 @@ td:last-child,th:last-child {
 .precision-card #precision-feedback.invalid { color: #a63d3d; }
 .precision-nudges { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 10px; }
 .precision-nudges button { padding: 8px; background: #e5ebee; border-radius: 5px; }
+.controls-legend { position: absolute; right: 18px; bottom: 12px; z-index: 4; width: max-content; max-width: calc(100% - 36px); border: 1px solid #c8d3db; border-radius: 10px; color: #2d3d47; background: #f8fafbf5; box-shadow: 0 6px 22px #32445118; }
+.controls-legend summary { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; list-style: none; font-size: 14px; }
+.controls-legend summary::-webkit-details-marker { display: none; }
+.controls-legend summary:focus-visible { outline: 2px solid #3475bd; outline-offset: 3px; border-radius: 8px; }
+.controls-legend summary svg { width: 17px; height: 17px; }
+.controls-legend[open] summary svg:last-child { transform: rotate(180deg); }
+.legend-content { position: absolute; bottom: calc(100% + 8px); right: 0; width: min(360px, calc(100vw - 36px)); max-height: min(60vh, 540px); overflow-y: auto; padding: 0 14px 14px; background: #f8fafb; border: 1px solid #c8d3db; border-radius: 10px; box-shadow: 0 6px 22px #32445124; }
+.legend-content h2 { font-size: 15px; margin: 16px 0 8px; }
+.legend-content dl { margin: 0; }
+.legend-content dl>div { display: grid; grid-template-columns: minmax(125px, 1fr) 1fr; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #e1e7eb; }
+.legend-content dt { display: flex; align-items: center; gap: 7px; }
+.legend-content dt svg { width: 16px; height: 16px; flex-shrink: 0; }
+.legend-content dd { margin: 0; font-size: 14px; }
+.legend-content kbd { white-space: normal; font-size: 13px; font-family: inherit; color: #425461; }
+.legend-content p { font-size: 14px; line-height: 1.5; }
+.canvas-help { max-width: calc(100% - 440px); text-align: left; left: 24px; transform: none; }
 @media (max-width: 760px) {
+  .controls-legend { right: 10px; bottom: 5px; max-width: calc(100% - 20px); }
+  .controls-legend summary { padding: 7px 10px; }
+  .legend-content { max-height: 52vh; }
+  .canvas-help { display: none; }
   .precision-card { width: min(245px, calc(100% - 75px)); top: 142px; max-height: calc(100% - 255px); }
   .precision-card p { display: block; }
   .build-dock [data-action="precision-toggle"] span { display: none; }

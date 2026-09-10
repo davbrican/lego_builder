@@ -45,6 +45,8 @@ El contenedor compila la aplicación con Node y sirve los archivos estáticos co
 
 ## Controles
 
+Abre **Botones y controles**, abajo a la derecha del editor, para consultar la leyenda desplegable de herramientas, ajustes de precisión y cámara. También se puede abrir con Tab y Enter; su contenido se desplaza en pantallas pequeñas.
+
 | Acción | Ratón / teclado |
 | --- | --- |
 | Colocar o aplicar herramienta | Clic izquierdo |
@@ -85,14 +87,25 @@ En **Mover (M)** aparecen los controles de precisión automáticamente. Al const
 ## Construir por conjuntos y unirlos
 
 1. Construye dos módulos en zonas distintas de la base.
-2. Activa **Conjunto conectado (G)** y pulsa cualquier pieza de un módulo. Se recorre la red de tetones y huecos en ambas direcciones, incluyendo puentes y piezas colgantes. Compartir la base o tocarse por una cara no une dos módulos.
+2. Activa **Conjunto conectado (G)** y pulsa cualquier pieza de un módulo. Se recorre la red de tetones, huecos y uniones de asa y clip en ambas direcciones, incluyendo puentes y piezas colgantes. Compartir la base o tocarse por una cara no une dos módulos.
 3. Arrastra los ejes **X/Y/Z**, cambia a **Girar Y** para usar el aro de giro en pasos de 90°, o usa **Colocar con puntero** y pulsa sobre el destino. También puedes introducir coordenadas del extremo mínimo del conjunto y previsualizarlas. X/Z se miden en tetones; Y, en placas.
 4. A menos de 0,7 tetones de distancia espacial entre conectores, se busca un encaje cercano válido. La previsualización se ajusta sin alterar el proyecto. Al soltar un eje cerca de un encaje, o pulsar con el puntero, aparece **¿Unir los conjuntos aquí?**. El botón Confirmar también permite revisar la colocación.
 5. Acepta **Sí, colocar aquí** para aplicar todo el movimiento de una vez. **Seguir ajustando** conserva la previsualización; **Cancelar / Esc** restaura las posiciones originales. **Deshacer** revierte el conjunto completo.
 
 El conjunto no se guarda como un objeto permanente: al volver a seleccionarlo, se recalculan sus conexiones. Después de unir dos módulos, G selecciona ambos. Los cambios provisionales no llegan al historial ni al autoguardado. Las herramientas individuales mantienen su funcionamiento. Cambiar de herramienta descarta la previsualización pendiente.
 
-Por ahora los giros son alrededor del eje vertical **Y**: no hay inclinaciones X/Z ni escalado. La conexión automática usa tetones y receptores verticales; aún no reconoce uniones laterales, clips, ejes ni bisagras. Estas limitaciones se muestran también en la ayuda y las fichas.
+Por ahora los giros son alrededor del eje vertical **Y**: no hay inclinaciones X/Z ni escalado. La conexión automática usa tetones y receptores verticales, además de las asas y clips revisados más abajo. Aún no reconoce tetones laterales SNOT, ejes ni bisagras.
+
+## Enganchar asas y clips
+
+Se han revisado las cinco referencias de esta familia presentes en el catálogo: **asas 48336 y 18649**, y **clips 61252, 60470b y 15712**. Sus conectores tienen posición, dirección y longitud útil; el clip doble puede enganchar sus dos mordazas a una misma asa.
+
+1. Coloca un clip y elige un asa, o hazlo en el orden inverso.
+2. Usa **R** para orientar la pieza y acerca el puntero a la zona de unión. Cuando encajan, el estado muestra **Asa y clip alineados**. El editor conserva la orientación que hayas elegido.
+3. Si el tetón cercano atrae la pieza, abre **Precisión → Tipo de encaje → Asas y clips**. **Solo tetones** desactiva esta atracción y **Automático** compara la proximidad de ambas conexiones.
+4. Confirma la colocación. **G** selecciona las piezas enganchadas como un conjunto; también se pueden acercar dos conjuntos por estas uniones y confirmar el ajuste.
+
+Las uniones transmiten conexión a la base y se conservan al guardar, importar, mover y deshacer. Son uniones rígidas con los ejes alineados: todavía no se puede articular una pieza alrededor del asa ni inclinarla en X/Z. Las barras verticales de la valla 30055 necesitan esa inclinación para estos clips y siguen fuera del encaje automático. No se infieren conexiones de las rejillas ni del simple contacto entre superficies.
 
 ## Guardado y portabilidad
 
@@ -137,6 +150,8 @@ El encaje al apuntar a una pieza busca el tetón superior más cercano y alinea 
 
 Las colisiones usan perfiles de columnas de **1/4 de tetón (2 mm)**, obtenidos de la geometría del cuerpo sin los tetones verticales estándar (los laterales sí cuentan como volumen). Se conserva el espacio libre bajo los arcos y en las esquinas. Es una aproximación conservadora al volumen exterior: puede rechazar encajes ajustados, huecos laterales o montajes especiales. Los huecos receptores se infieren de la base de cada pieza y se revisan explícitamente para arcos y piezas con tetones integrados; no son un catálogo oficial de conexiones mecánicas.
 
+Para un asa y un clip con conectores alineados se usan perfiles más finos, de **1/20 de tetón**, derivados de sus geometrías. Solo se admite el solapamiento del perfil dentro de la abertura de la mordaza enganchada. El cuerpo de ambas piezas y cualquier tercera pieza siguen comprobándose; alinear los conectores no autoriza a atravesar los cuerpos.
+
 **Ruedas, neumáticos y llantas** son piezas individuales: se pueden colocar sobre la base o en modo libre. Todavía no se simulan encajes de ejes y pasadores, giro de ruedas, bisagras, conexiones laterales Technic ni estabilidad o resistencia. Tampoco se comprueba la secuencia física de montaje. Las piezas sin conexión se señalan y no caen por gravedad. El límite de protección es de 2.000 piezas; el rendimiento depende de la GPU y de la geometría elegida.
 
 Esta versión usa proyectos y almacenamiento local **v2**. El prototipo v1 se descarta intencionadamente durante esta fase de desarrollo, sin migraciones ni alias de sus 27 piezas procedurales.
@@ -148,6 +163,7 @@ Esta versión usa proyectos y almacenamiento local **v2**. El prototipo v1 se de
 - `public/ldraw/CAreadme.txt`, `CAlicense.txt`, `CAlicense4.txt`: condiciones originales CC BY 2.0 y/o CC BY 4.0.
 - `scripts/ldraw-sources.json`: copia local de las 576 definiciones necesarias, con sus cabeceras originales. Solo se han normalizado las rutas de subarchivos.
 - `scripts/build-ldraw.mjs`: triangula con Three.js, convierte ejes y unidades, indexa la geometría y genera perfiles y metadatos. Las aristas gráficas LDraw se omiten y los colores se sustituyen por el elegido en el editor.
+- `scripts/build-mechanical.mjs`: genera los perfiles finos de las cinco asas y clips a partir de sus geometrías locales, conservando su hash para detectar datos desactualizados. `catalog:build` ejecuta ambos generadores; `npm run mechanical:build` regenera solo estos perfiles.
 
 Las geometrías ya vienen generadas: **Docker no necesita acceder a LDraw**. Para regenerarlas a partir de las fuentes incluidas:
 
@@ -187,13 +203,15 @@ npm run build
 npm run preview
 ```
 
-`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 31 pruebas cubren las 181 geometrías, los movimientos de conjuntos y los anclajes y ajustes de precisión, además de conexiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
+`npm run check` comprueba sintaxis, ejecuta las pruebas y compila producción. Las 36 pruebas cubren las 181 geometrías, los movimientos de conjuntos, los anclajes y ajustes de precisión y las seis combinaciones de asa y clip en ambos órdenes y sus cuatro giros, además de conexiones, colisiones, búsqueda, arcos, curvas, medios tetones, importación, historial, persistencia, exportación GLB y atribución en PNG. No sustituyen pruebas de interacción en el navegador.
 
 ## Estructura
 
 | Archivo | Responsabilidad |
 | --- | --- |
 | `src/precision.js` | Previsualización fijada, pasos de teclado y giro sobre el punto de agarre |
+| `src/mechanical.js` | Conectores revisados de asas y clips, alineación y abertura de las mordazas |
+| `src/generated/mechanical-collisions.json` | Perfiles finos de colisión de asas y clips con hashes de origen |
 | `src/assemblies.js` | Selección conectada, transformaciones rígidas, encaje y borradores sin mutación |
 | `src/assembly-controls.js` | Ejes de desplazamiento, aro Y y previsualización del conjunto |
 | `src/catalog.js` | Catálogo LDraw, búsqueda, colores y transformación de conectores |

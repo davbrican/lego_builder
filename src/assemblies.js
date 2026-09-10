@@ -1,5 +1,6 @@
 import {contactPoints,dimensions,PLATE_HEIGHT,MAX_PIECES} from './catalog.js';
 import {assemblyIds,connectedIds,placementError} from './placement.js';
+import {MECHANICAL_PARTS,mechanicalCandidates} from './mechanical.js';
 
 export {assemblyIds};
 export const half=n=>Math.round(n*2)/2;
@@ -50,6 +51,14 @@ export function snapAssembly(group,others,size,options={}){
     bucket.get(k).push({point,id:piece.id});
   }
   const proposals=new Map();
+  for(const piece of group.filter(p=>MECHANICAL_PARTS[p.part]))for(const target of others.filter(p=>MECHANICAL_PARTS[p.part])){
+    for(const option of mechanicalCandidates(piece,target)){
+      const delta={x:option.piece.x-piece.x,y:option.piece.y-piece.y,z:option.piece.z-piece.z};
+      const distance=Math.hypot(delta.x,delta.y*PLATE_HEIGHT,delta.z);
+      if(distance>radius)continue;
+      proposals.set(`${delta.x}/${delta.y}/${delta.z}`,{delta,distance,targetId:target.id});
+    }
+  }
   for(const piece of group)for(const type of ['top','bottom'])for(const point of contactPoints(piece,type)){
     const origin=world(point),cell=origin.map(Math.floor),bucket=buckets[type==='top'?'bottom':'top'];
     for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++){
